@@ -11,13 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('organization_users', function (Blueprint $table) {
+        Schema::create('branches', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
-            $table->boolean('is_owner')->default(false);
-            $table->foreignId('role_id')->constrained('roles')->cascadeOnDelete();
             $table->foreignId('organization_id')->constrained('organizations')->cascadeOnDelete();
-            $table->foreignId('branch_id')->nullable()->constrained('branches')->nullOnDelete();
+            $table->string('name');
+            $table->string('code')->unique();
+            $table->string('phone')->unique();
+            $table->string('email')->unique();
+            $table->string('address');
+            $table->string('city');
+            $table->string('province');
+            $table->decimal('latitude',10,2);
+            $table->decimal('longitude',10,2);
             $table->timestamps();
         });
     }
@@ -27,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('organization_users');
+        Schema::dropIfExists('branches');
     }
 };

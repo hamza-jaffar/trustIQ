@@ -12,10 +12,4 @@ class Permission extends Model
     {
         return $this->belongsTo(RolePermission::class);
     }
-
-
-    public function role()
-    {
-        return $this->rolePermission()->role();
-    }
 }
