@@ -22,4 +22,9 @@ class OrganizationUser extends Model
     {
         return $this->belongsTo(Organization::class);
     }
+
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class);
+    }
 }
