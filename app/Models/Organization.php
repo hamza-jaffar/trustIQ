@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 #[Fillable('name', 'slug', 'logo', 'email', 'phone', 'website', 'business_type', 'registration_number', 'tax_number', 'trust_score', 'status')]
-class Organtization extends Model
+class Organization extends Model
 {
     use SoftDeletes;
     /**
@@ -22,4 +22,10 @@ class Organtization extends Model
             'status' => OrganizationStatus::class,
         ];
     }
+
+    public function user()
+    {
+        return $this->belongsTo(OrganizationUser::class);
+    }
+
 }

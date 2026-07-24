@@ -8,5 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 #[Fillable('name', 'description')]
 class Permission extends Model
 {
-    //
+    public function rolePermission()
+    {
+        return $this->belongsTo(RolePermission::class);
+    }
+
+
+    public function role()
+    {
+        return $this->rolePermission()->role();
+    }
 }

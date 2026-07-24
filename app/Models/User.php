@@ -49,4 +49,14 @@ class User extends Authenticatable implements PasskeyUser
             'status' => UserStatus::class,
         ];
     }
+
+    public function organizationUser()
+    {
+        return $this->belongsTo(OrganizationUser::class);
+    }
+
+    public function organization()
+    {
+        return $this->organizationUser()->organization();
+    }
 }

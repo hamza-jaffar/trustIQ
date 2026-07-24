@@ -10,4 +10,19 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Role extends Model
 {
     use SoftDeletes;
+
+    public function organization()
+    {
+        return $this->belongsTo(Organization::class);
+    }
+
+    public function rolePermission()
+    {
+        return $this->belongsTo(RolePermission::class);
+    }
+
+    public function permissions()
+    {
+        return $this->rolePermission()->permission();
+    }
 }

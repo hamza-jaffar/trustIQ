@@ -11,12 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('organization_users', function (Blueprint $table) {
+        Schema::create('audit_logs', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
-            $table->boolean('is_owner')->default(false);
-            $table->foreignId('role_id')->constrained('roles')->cascadeOnDelete();
-            $table->foreignId('organization_id')->constrained('organizations')->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained('organizaions')->cascadeOnDelete();
+            $table->string('action')->nullable();
+            $table->string('entity')->nullable();
+            $table->decimal('entity_id')->nullable();
+            $table->string('ip_address');
+            $table->string('user_agent');
             $table->timestamps();
         });
     }
@@ -26,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('organization_users');
+        Schema::dropIfExists('audit_logs');
     }
 };
