@@ -1,4 +1,5 @@
 import type { Auth } from '@/types/auth';
+import { Organization } from './data';
 
 declare module 'react' {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -13,6 +14,7 @@ declare module '@inertiajs/core' {
             name: string;
             auth: Auth;
             sidebarOpen: boolean;
+            organization?: Organization;
             [key: string]: unknown;
         };
     }

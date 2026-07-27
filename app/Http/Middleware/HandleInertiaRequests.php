@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\OrganizationUser;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -35,12 +36,19 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
+        $user = $request->user();
+        $organizationUser = null;
+        if($user) {
+            $organizationUser = OrganizationUser::where('user_id', $user->id)->first() ?? null;
+        }
+
         return [
             ...parent::share($request),
             'name' => config('app.name'),
             'auth' => [
-                'user' => $request->user(),
+                'user' => $user,
             ],
+            'organization' => $organizationUser ? $organizationUser->organization : null,
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
         ];
     }
