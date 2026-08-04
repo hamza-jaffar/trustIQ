@@ -31,6 +31,7 @@ class OrganizationController extends Controller
 
             $logo = null;
 
+            //TODO: If logo already exist first delete the prev logo then store new
             if ($request->hasFile('logo')) {
                 $logo = FileHelper::store('organizations', $request->file('logo'));
             }

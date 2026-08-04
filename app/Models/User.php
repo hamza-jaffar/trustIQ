@@ -52,11 +52,18 @@ class User extends Authenticatable implements PasskeyUser
 
     public function organizationUser()
     {
-        return $this->belongsTo(OrganizationUser::class);
+        return $this->hasOne(OrganizationUser::class);
     }
 
     public function organization()
     {
-        return $this->organizationUser()->organization();
+        return $this->hasOneThrough(
+            Organization::class,
+            OrganizationUser::class,
+            'user_id',
+            'id',
+            'id',
+            'organization_id'
+        );
     }
 }

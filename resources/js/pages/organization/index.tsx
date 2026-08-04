@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label'
 import { organization } from '@/routes'
 import { Form, usePage } from '@inertiajs/react'
 import { ImageOff, Loader2 } from 'lucide-react'
+import Heading from '@/components/heading'
 
 const OrganizationIndex = () => {
   const { organization } = usePage().props;
@@ -31,6 +32,7 @@ const OrganizationIndex = () => {
 
   return (
     <div className="p-8">
+      <Heading title='Manage Organization Info' description='Update and Save the organization info' />
       <Form
         {...OrganizationController.post.form()}
         options={{
