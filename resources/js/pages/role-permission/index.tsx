@@ -31,12 +31,16 @@ type RoleIndexProps = PageProps & {
   filters?: {
     search?: string
   }
+  permissions: string[]
 }
 
 const RoleIndex = () => {
-  const { roles: rolePage, filters } = usePage<RoleIndexProps>().props
+  const { roles: rolePage, filters, permissions = [] } = usePage<RoleIndexProps>().props
   const [search, setSearch] = useState(filters?.search ?? '')
   const [pendingDeleteRole, setPendingDeleteRole] = useState<RoleListItem | null>(null)
+  const canCreate = permissions.includes('roles.create')
+  const canEdit = permissions.includes('roles.edit')
+  const canDelete = permissions.includes('roles.delete')
 
   const handleSearch = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -87,12 +91,14 @@ const RoleIndex = () => {
               Search
             </Button>
           </form>
-          <Link href='/roles/create'>
-            <Button className='gap-2'>
-              <Plus className='h-4 w-4' />
-              Create
-            </Button>
-          </Link>
+          {canCreate ? (
+            <Link href='/roles/create'>
+              <Button className='gap-2'>
+                <Plus className='h-4 w-4' />
+                Create
+              </Button>
+            </Link>
+          ) : null}
         </div>
       </div>
 
@@ -168,22 +174,26 @@ const RoleIndex = () => {
                           </DialogContent>
                         </Dialog>
 
-                        <Link href={`/roles/${role.id}/edit`}>
-                          <Button variant='outline' size='sm' disabled={role.is_system}>
-                            <Pencil className='mr-2 h-4 w-4' />
-                            Edit
-                          </Button>
-                        </Link>
+                        {canEdit ? (
+                          <Link href={`/roles/${role.id}/edit`}>
+                            <Button variant='outline' size='sm' disabled={role.is_system}>
+                              <Pencil className='mr-2 h-4 w-4' />
+                              Edit
+                            </Button>
+                          </Link>
+                        ) : null}
 
-                        <Button
-                          variant='destructive'
-                          size='sm'
-                          onClick={() => handleDelete(role)}
-                          disabled={role.is_system}
-                        >
-                          <Trash2 className='mr-2 h-4 w-4' />
-                          Delete
-                        </Button>
+                        {canDelete ? (
+                          <Button
+                            variant='destructive'
+                            size='sm'
+                            onClick={() => handleDelete(role)}
+                            disabled={role.is_system}
+                          >
+                            <Trash2 className='mr-2 h-4 w-4' />
+                            Delete
+                          </Button>
+                        ) : null}
                       </div>
                     </td>
                   </tr>

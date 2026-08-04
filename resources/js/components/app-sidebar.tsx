@@ -1,4 +1,4 @@
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import { BookOpen, Building, FolderGit2, LayoutGrid, ShieldCheck } from 'lucide-react';
 import AppLogo from '@/components/app-logo';
 import { NavFooter } from '@/components/nav-footer';
@@ -13,10 +13,10 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { dashboard, organization, roles } from '@/routes';
+import { dashboard, organization, roles, users } from '@/routes';
 import type { NavItem } from '@/types';
 
-const mainNavItems: NavItem[] = [
+const allMainNavItems: NavItem[] = [
     {
         title: 'Dashboard',
         href: dashboard(),
@@ -31,6 +31,13 @@ const mainNavItems: NavItem[] = [
         title: 'Roles',
         href: roles(),
         icon: ShieldCheck,
+        permission: 'roles.view',
+    },
+    {
+        title: 'Users',
+        href: users(),
+        icon: ShieldCheck,
+        permission: 'users.view',
     }
 ];
 
@@ -46,6 +53,10 @@ const mainNavItems: NavItem[] = [
 //         icon: BookOpen,
 
 export function AppSidebar() {
+    const { permissions = [] } = usePage().props as { permissions?: string[] };
+
+    const mainNavItems = allMainNavItems.filter((item) => !item.permission || permissions.includes(item.permission));
+
     return (
         <Sidebar collapsible="icon" variant="inset">
             <SidebarHeader>

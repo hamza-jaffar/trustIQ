@@ -42,12 +42,15 @@ class HandleInertiaRequests extends Middleware
             $organizationUser = OrganizationUser::where('user_id', $user->id)->first() ?? null;
         }
 
+        $permissions = $organizationUser?->role?->permissions()->pluck('name')->all() ?? [];
+
         return [
             ...parent::share($request),
             'name' => config('app.name'),
             'auth' => [
                 'user' => $user,
             ],
+            'permissions' => $permissions,
             'organization' => $organizationUser ? $organizationUser->organization : null,
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
         ];
