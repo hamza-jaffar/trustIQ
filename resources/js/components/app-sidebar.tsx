@@ -26,6 +26,7 @@ const allMainNavItems: NavItem[] = [
         title: 'Organization',
         href: organization(),
         icon: Building,
+        permission: 'organizations.view'
     },
     {
         title: 'Roles',

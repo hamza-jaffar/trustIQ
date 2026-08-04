@@ -16,8 +16,6 @@ class UserController extends Controller
 {
     public function index(Request $request)
     {
-        $this->authorizePermission($request, 'users.view');
-
         $organizationId = $request->user()?->organization()?->first()?->id;
 
         $query = User::query()
@@ -57,14 +55,12 @@ class UserController extends Controller
             'filters' => [
                 'search' => $request->input('search'),
             ],
-            'permissions' => $this->currentPermissions($request),
+            'permissions' => $request->user()?->organizationUser?->role?->permissions()->pluck('name')->all() ?? [],
         ]);
     }
 
     public function create(Request $request)
     {
-        $this->authorizePermission($request, 'users.create');
-
         $organizationId = $request->user()?->organization()?->first()?->id;
         $roles = Role::query()
             ->where('organization_id', $organizationId)
@@ -73,14 +69,12 @@ class UserController extends Controller
 
         return Inertia::render('users/create', [
             'roles' => $roles,
-            'permissions' => $this->currentPermissions($request),
+            'permissions' => $request->user()?->organizationUser?->role?->permissions()->pluck('name')->all() ?? [],
         ]);
     }
 
     public function store(StoreUserRequest $request)
     {
-        $this->authorizePermission($request, 'users.create');
-
         $organizationId = $request->user()?->organization()?->first()?->id;
         $role = Role::query()->where('organization_id', $organizationId)->find($request->input('role_id'));
 
@@ -108,8 +102,6 @@ class UserController extends Controller
 
     public function edit(Request $request, User $user)
     {
-        $this->authorizePermission($request, 'users.edit');
-
         $organizationId = $request->user()?->organization()?->first()?->id;
         abort_unless($this->belongsToOrganization($user, $organizationId), 404);
 
@@ -131,14 +123,12 @@ class UserController extends Controller
                 'is_current_user' => $user->id === $request->user()?->id,
             ],
             'roles' => $roles,
-            'permissions' => $this->currentPermissions($request),
+            'permissions' => $request->user()?->organizationUser?->role?->permissions()->pluck('name')->all() ?? [],
         ]);
     }
 
     public function update(UpdateUserRequest $request, User $user)
     {
-        $this->authorizePermission($request, 'users.edit');
-
         $organizationId = $request->user()?->organization()?->first()?->id;
         abort_unless($this->belongsToOrganization($user, $organizationId), 404);
 
@@ -169,8 +159,6 @@ class UserController extends Controller
 
     public function delete(Request $request, User $user)
     {
-        $this->authorizePermission($request, 'users.delete');
-
         $organizationId = $request->user()?->organization()?->first()?->id;
         abort_unless($this->belongsToOrganization($user, $organizationId), 404);
 
@@ -178,24 +166,6 @@ class UserController extends Controller
         $user->delete();
 
         return redirect()->route('users')->with('success', 'User deleted successfully.');
-    }
-
-    private function authorizePermission(Request $request, string $permission): void
-    {
-        $permissions = $this->currentPermissions($request);
-
-        abort_unless(in_array($permission, $permissions, true), 403);
-    }
-
-    private function currentPermissions(Request $request): array
-    {
-        $organizationUser = OrganizationUser::query()
-            ->where('user_id', $request->user()?->id)
-            ->first();
-
-        $role = $organizationUser?->role;
-
-        return $role?->permissions()->pluck('name')->all() ?? [];
     }
 
     private function belongsToOrganization(User $user, ?int $organizationId): bool
