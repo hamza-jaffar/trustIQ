@@ -11,7 +11,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::inertia('dashboard', 'dashboard')->name('dashboard');
 
     Route::get('organization', [OrganizationController::class, 'index'])->middleware('permission:organization.view')->name('organization');
-    Route::post('organization/post', [OrganizationController::class, 'post'])->middleware('permission:organization.view')->name('organization.post');
+    Route::post('organization/post', [OrganizationController::class, 'post'])->middleware('permission:organization.update')->name('organization.post');
 
     Route::prefix('roles')->name('roles')->middleware('permission:roles.view')->group(function () {
         Route::get('/', [RoleController::class, 'index']);

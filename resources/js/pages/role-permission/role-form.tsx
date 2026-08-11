@@ -171,6 +171,7 @@ export default function RoleForm({
                                                 id={`permission-${permission.id}`}
                                                 name="permissions[]"
                                                 value={permission.id}
+                                                className='cursor-pointer'
                                                 checked={selectedPermissions.includes(permission.id)}
                                                 onCheckedChange={(checked) =>
                                                     togglePermission(permission.id, checked)
@@ -188,10 +189,6 @@ export default function RoleForm({
                 <div className="flex justify-end gap-3 border-t pt-6">
                     <Button type="button" variant="outline" asChild>
                         <Link href={cancelHref}>Cancel</Link>
-                    </Button>
-
-                    <Button type="submit" disabled={isSystem}>
-                        {mode === 'edit' ? 'Save Changes' : 'Create Role'}
                     </Button>
                 </div>
             </form>

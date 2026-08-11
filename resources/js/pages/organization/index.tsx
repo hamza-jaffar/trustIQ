@@ -10,9 +10,9 @@ import { ImageOff, Loader2 } from 'lucide-react'
 import Heading from '@/components/heading'
 
 const OrganizationIndex = () => {
-  const { organization } = usePage().props;
+  const { organization, permissions } = usePage().props;
   const formRef = useRef<HTMLFormElement>(null)
-
+  const canUpdate = permissions.includes('organization.update');
   // Replace with your organization's current logo URL
   const [logoPreview, setLogoPreview] = useState<string | null>(organization?.logo ? `/storage/${organization?.logo}` : null);
 
@@ -211,21 +211,24 @@ const OrganizationIndex = () => {
             </div>
 
             <div className="flex justify-end">
-              <Button
-                type="submit"
-                disabled={processing}
-                className="w-full sm:w-40"
-                data-test="update-organization-button"
-              >
-                {processing ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Saving...
-                  </>
-                ) : (
-                  'Save'
-                )}
-              </Button>
+
+              {canUpdate && (
+                <Button
+                  type="submit"
+                  disabled={processing}
+                  className="w-full sm:w-40"
+                  data-test="update-organization-button"
+                >
+                  {processing ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Saving...
+                    </>
+                  ) : (
+                    'Save'
+                  )}
+                </Button>
+              )}
             </div>
           </>
         )}
