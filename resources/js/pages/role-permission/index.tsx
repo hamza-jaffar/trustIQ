@@ -8,6 +8,7 @@ import { Link, router, usePage } from '@inertiajs/react'
 import type { PageProps } from '@inertiajs/core'
 import { Eye, Pencil, Plus, Search, Trash2 } from 'lucide-react'
 import { useState } from 'react'
+import { create } from '@/routes/roles'
 
 type RoleListItem = {
   id: string
@@ -92,7 +93,7 @@ const RoleIndex = () => {
             </Button>
           </form>
           {canCreate ? (
-            <Link href='/roles/create'>
+            <Link href={create()}>
               <Button className='gap-2'>
                 <Plus className='h-4 w-4' />
                 Create

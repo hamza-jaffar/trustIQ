@@ -23,10 +23,8 @@ const OrganizationIndex = () => {
 
     if (!file) return
 
-    // Show preview immediately
     setLogoPreview(URL.createObjectURL(file))
 
-    // Submit form automatically
     formRef.current?.requestSubmit()
   }
 

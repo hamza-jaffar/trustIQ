@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Customer\CustomerController;
 use App\Http\Controllers\Organization\OrganizationController;
 use App\Http\Controllers\Role\RoleController;
 use App\Http\Controllers\User\UserController;
@@ -29,6 +30,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/{user}/edit', [UserController::class, 'edit'])->name('.edit')->middleware('permission:users.edit');
         Route::put('/{user}', [UserController::class, 'update'])->name('.update')->middleware('permission:users.edit');
         Route::delete('/{user}', [UserController::class, 'delete'])->name('.delete')->middleware('permission:users.delete');
+    });
+
+    Route::prefix('customers')->name('customers')->group(function () {
+        Route::get('/', [CustomerController::class, 'index'])->name('.index');
+        Route::get('/create', [CustomerController::class, 'create'])->name('.create');
+        Route::post('/store', [CustomerController::class, 'store'])->name('store');
+        Route::get('/search-by-cnic/{cnic}', [CustomerController::class, 'searchByCnic'])->name('.searchByCnic');
     });
 
 });

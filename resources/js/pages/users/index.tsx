@@ -7,6 +7,7 @@ import type { PageProps } from '@inertiajs/core'
 import { Eye, Pencil, Plus, Search, Trash2 } from 'lucide-react'
 import { useState } from 'react'
 import { users } from '@/routes'
+import { create } from '@/routes/users'
 
 type UserListItem = {
   id: number
@@ -83,7 +84,7 @@ export default function UserIndexPage() {
             </Button>
           </form>
           {canCreate ? (
-            <Link href='/users/create'>
+            <Link href={create()}>
               <Button className='gap-2'>
                 <Plus className='h-4 w-4' />
                 Create

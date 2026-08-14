@@ -1,5 +1,5 @@
 import { Link, usePage } from '@inertiajs/react';
-import { BookOpen, Building, FolderGit2, LayoutGrid, ShieldCheck, User, Users } from 'lucide-react';
+import { BookOpen, Building, FolderGit2, IdCard, LayoutGrid, ShieldCheck, User, Users } from 'lucide-react';
 import AppLogo from '@/components/app-logo';
 import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
@@ -15,6 +15,7 @@ import {
 } from '@/components/ui/sidebar';
 import { dashboard, organization, roles, users } from '@/routes';
 import type { NavItem } from '@/types';
+import customers from '@/routes/customers';
 
 const allMainNavItems: NavItem[] = [
     {
@@ -37,8 +38,13 @@ const allMainNavItems: NavItem[] = [
     {
         title: 'Users',
         href: users(),
-        icon: Users,
+        icon: IdCard,
         permission: 'users.view',
+    },
+    {
+        title: 'Customers',
+        href: customers.index(),
+        icon: Users,
     }
 ];
 
