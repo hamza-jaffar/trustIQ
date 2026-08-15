@@ -36,7 +36,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/', [CustomerController::class, 'index'])->name('.index');
         Route::get('/create', [CustomerController::class, 'create'])->name('.create');
         Route::post('/store', [CustomerController::class, 'store'])->name('store');
+        Route::put('/update/{id}', [CustomerController::class, 'update'])->name('.update');
         Route::get('/search-by-cnic/{cnic}', [CustomerController::class, 'searchByCnic'])->name('.searchByCnic');
+        Route::get('/{cnic}', [CustomerController::class, 'profile'])->name('.profile');
     });
 
 });

@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Customer;
 
 use App\Helpers\FileHelper;
 use App\Http\Controllers\Controller;
-use App\Models\Customer;
 use App\Http\Requests\Customer\StoreCustomerRequest;
-use Illuminate\Http\Request;
+use App\Http\Requests\Customer\UpdateCustomerRequest;
+use App\Models\Customer;
 use Inertia\Inertia;
 
 class CustomerController extends Controller
@@ -24,13 +24,13 @@ class CustomerController extends Controller
     public function store(StoreCustomerRequest $request)
     {
         $validated = $request->validated();
-        
+
         if (isset($validated['date_of_birth'])) {
             $validated['dob'] = $validated['date_of_birth'];
             unset($validated['date_of_birth']);
         }
 
-        $validated['country'] = "Pakistan";
+        $validated['country'] = 'Pakistan';
 
         $customer = Customer::create($validated);
 
@@ -68,5 +68,41 @@ class CustomerController extends Controller
         }
 
         return response()->json(['message' => 'Customer not found', 'status' => false], 404);
+    }
+
+    // public function
+
+    public function profile(string $cnic)
+    {
+        $customer = Customer::where('cnic', $cnic)->first();
+
+        // dd($customer->isVerified());
+
+        return Inertia::render('customer/profile/index', ['customer' => $customer]);
+    }
+
+    public function update(UpdateCustomerRequest $request, string $id)
+    {
+        $customer = Customer::findOrFail($id);
+
+        $validated = $request->validated();
+
+        if (
+            array_key_exists('email', $validated) &&
+            $validated['email'] !== $customer->email
+        ) {
+            $validated['email_confirm_at'] = null;
+        }
+
+        if (
+            array_key_exists('phone', $validated) &&
+            $validated['phone'] !== $customer->phone
+        ) {
+            $validated['phone_confirm_at'] = null;
+        }
+
+        $customer->update($validated);
+
+        return back()->with('success', 'Customer updated successfully.');
     }
 }

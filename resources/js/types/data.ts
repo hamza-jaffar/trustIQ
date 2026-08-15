@@ -28,3 +28,25 @@ export interface Permission {
     created_at: string;
     updated_at: string;
 }
+
+export interface Customer {
+    id: string;
+    first_name: string;
+    last_name: string;
+    cnic: string;
+    email: string;
+    phone: string;
+    dob: string;
+    gender: string;
+    occupation: string;
+    verification_status: "verified" | "pending" | "rejected";
+    monthly_income: string;
+    city: string;
+    province: string;
+    country: string;
+    address: string;
+    email_confirm_at: string;
+    phone_confirm_at: string;
+    created_at: string;
+    updated_at: string;
+}

@@ -26,7 +26,7 @@ class StoreCustomerRequest extends FormRequest
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['nullable', 'string', 'max:255'],
             'cnic' => ['required', 'string', 'max:20', 'unique:customers,cnic'],
-            'phone' => ['required', 'string', 'max:20'],
+            'phone' => ['required', 'string', 'regex:/^03[0-9]{9}$/'],
             'email' => ['nullable', 'email', 'max:255', 'unique:customers,email'],
             'date_of_birth' => ['nullable', 'date'],
             'gender' => ['nullable', 'string', 'in:male,female,other'],

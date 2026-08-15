@@ -1,5 +1,4 @@
 import Heading from '@/components/heading'
-import InputError from '@/components/input-error'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -7,7 +6,8 @@ import { create } from '@/routes/roles'
 import { LoaderCircleIcon, Plus } from 'lucide-react'
 import { useState } from 'react'
 import CreateCustomerForm from './create-form'
-import { searchByCnic } from '@/routes/customers'
+import { index, profile, searchByCnic } from '@/routes/customers'
+import { router } from '@inertiajs/react'
 
 interface ErrorMessageType {
     type: "unexpected" | "notfound" | "validation";
@@ -17,7 +17,7 @@ interface ErrorMessageType {
 const CreateCustomer = () => {
     const [cnic, setCnic] = useState<string>("");
     const [errorMessage, setErrorMessage] = useState<ErrorMessageType | null>(null);
-    const [mode, setMode] = useState<"search" | "create">("create");
+    const [mode, setMode] = useState<"search" | "create">("search");
     const [searching, setSearching] = useState<boolean>(false);
 
     async function handleSearchByCnic() {
@@ -45,7 +45,10 @@ const CreateCustomer = () => {
                 return;
             }
 
-            
+            if (data.status)
+            {
+                router.visit(profile(cnic));
+            }
         } catch (error) {
             console.error("Search Error:", error);
             setErrorMessage({
@@ -97,6 +100,10 @@ CreateCustomer.layout = {
     breadcrumbs: [
         {
             title: 'Customers',
+            href: index(),
+        },
+        {
+            title: 'Search or Create Customer',
             href: create(),
         },
     ],

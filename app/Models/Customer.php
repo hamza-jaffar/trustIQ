@@ -12,4 +12,9 @@ class Customer extends Model
     {
         return $this->hasMany(CustomerDocuments::class);
     }
+
+    public function isVerified(): bool
+    {
+        return !is_null($this->email_confirm_at);
+    }
 }
