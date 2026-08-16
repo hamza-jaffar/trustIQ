@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { ShieldCheck, ShieldAlert, ShieldQuestion, User, Phone, MapPin, Briefcase, PenBoxIcon, Mail, Calendar, Check, Currency } from 'lucide-react'
 import { Customer } from '@/types/data';
 import { Form } from '@inertiajs/react';
-import { update } from '@/routes/customers';
+import { create, index, update } from '@/routes/customers';
 import { Button } from '@/components/ui/button';
 import InputError from '@/components/input-error';
 import ColorfulRow from './colorful-row';
@@ -54,7 +54,7 @@ const CustomerProfile = ({ customer }: { customer: Customer }) => {
                 </div>
 
                 <div>
-                    
+
                 </div>
             </div>
 
@@ -128,3 +128,20 @@ const CustomerProfile = ({ customer }: { customer: Customer }) => {
 }
 
 export default CustomerProfile;
+
+
+CustomerProfile.layout = {
+    breadcrumbs: [
+        {
+            title: 'Customers',
+            href: index(),
+        },
+        {
+            title: 'Search Customer',
+            href: create(),
+        },
+        {
+            title: 'Profile'
+        }
+    ],
+}
