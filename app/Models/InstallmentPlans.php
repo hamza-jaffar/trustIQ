@@ -16,6 +16,11 @@ class InstallmentPlans extends Model
         return $this->hasMany(InstallmentSchedules::class);
     }
 
+    public function guarantors()
+    {
+        return $this->hasMany(Guarantor::class, 'installment_id');
+    }
+
     public function organization()
     {
         return $this->belongsTo(Organization::class);
@@ -30,4 +35,5 @@ class InstallmentPlans extends Model
     {
         return $this->belongsTo(Customer::class);
     }
+
 }

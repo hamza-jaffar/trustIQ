@@ -1,5 +1,14 @@
 import { CheckIcon, ChevronDownIcon, SearchIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+interface SearchableDropdownProps {
+    options: any[];
+    value?: string | number | null;
+    onChange: (value: string | number | null) => void;
+    placeholder?: string;
+    searchPlaceholder?: string;
+    disabled?: boolean;
+    className?: string;
+}
 
 const SearchableDropdown = ({
     options,

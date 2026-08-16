@@ -50,3 +50,13 @@ export interface Customer {
     created_at: string;
     updated_at: string;
 }
+
+export type Guarantor = {
+    customer_id: string
+    full_name: string
+    cnic: string
+    phone: string
+    address: string
+    relationship: string
+    monthly_income: string
+}

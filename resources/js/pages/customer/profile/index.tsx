@@ -1,11 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { ShieldCheck, ShieldAlert, ShieldQuestion, User, Phone, MapPin, Briefcase, PenBoxIcon, Mail, Calendar, Check, Currency } from 'lucide-react'
+import { ShieldCheck, ShieldAlert, ShieldQuestion, User, Phone, MapPin, Briefcase, PenBoxIcon, Mail, Calendar, Check, Currency, Plus } from 'lucide-react'
 import { Customer } from '@/types/data';
-import { Form } from '@inertiajs/react';
+import { Form, Link } from '@inertiajs/react';
 import { create, index, update } from '@/routes/customers';
 import { Button } from '@/components/ui/button';
 import InputError from '@/components/input-error';
 import ColorfulRow from './colorful-row';
+import installments from '@/routes/installments';
 
 
 const CustomerProfile = ({ customer }: { customer: Customer }) => {
@@ -51,6 +52,11 @@ const CustomerProfile = ({ customer }: { customer: Customer }) => {
                         </div>
                         <p className="text-indigo-100 font-medium tracking-wide">National ID (CNIC): <span className="font-mono bg-white/10 px-2 py-0.5 rounded text-white">{customer.cnic}</span></p>
                     </div>
+                    <div><Link href={installments.create({
+                        query: {
+                            customer_id: customer.id,
+                        },
+                    })}><Button variant="link" className='text-white'><Plus /> Create Installment</Button></Link></div>
                 </div>
 
                 <div>

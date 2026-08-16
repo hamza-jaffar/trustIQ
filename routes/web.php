@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Customer\CustomerController;
+use App\Http\Controllers\Installments\InstallmentsController;
 use App\Http\Controllers\Organization\OrganizationController;
 use App\Http\Controllers\Role\RoleController;
 use App\Http\Controllers\User\UserController;
@@ -39,6 +40,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::put('/update/{id}', [CustomerController::class, 'update'])->name('.update');
         Route::get('/search-by-cnic/{cnic}', [CustomerController::class, 'searchByCnic'])->name('.searchByCnic');
         Route::get('/{cnic}', [CustomerController::class, 'profile'])->name('.profile');
+    });
+
+    Route::prefix('installments')->name('installments')->group(function () {
+        Route::get('/', [InstallmentsController::class, 'index'])->name('.index');
+        Route::get('/create', [InstallmentsController::class, 'create'])->name('.create');
+        Route::post('/store', [InstallmentsController::class, 'store'])->name('.store');
+
     });
 
 });
