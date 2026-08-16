@@ -66,4 +66,9 @@ class User extends Authenticatable implements PasskeyUser
             'organization_id'
         );
     }
+
+    public function installmentPlans()
+    {
+        return $this->hasMany(InstallmentPlans::class);
+    }
 }

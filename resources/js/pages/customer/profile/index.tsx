@@ -52,6 +52,10 @@ const CustomerProfile = ({ customer }: { customer: Customer }) => {
                         <p className="text-indigo-100 font-medium tracking-wide">National ID (CNIC): <span className="font-mono bg-white/10 px-2 py-0.5 rounded text-white">{customer.cnic}</span></p>
                     </div>
                 </div>
+
+                <div>
+                    
+                </div>
             </div>
 
             {/* Main Content Grid split layout */}

@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Organization extends Model
 {
     use SoftDeletes;
+
     /**
      * Get the attributes that should be cast.
      *
@@ -28,4 +29,8 @@ class Organization extends Model
         return $this->belongsTo(OrganizationUser::class);
     }
 
+    public function installmentPlans()
+    {
+        return $this->hasMany(InstallmentPlans::class);
+    }
 }
