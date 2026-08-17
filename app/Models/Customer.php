@@ -25,4 +25,9 @@ class Customer extends Model
     {
         return $this->hasMany(InstallmentPlans::class);
     }
+
+    public function installments()
+    {
+        return $this->hasMany(InstallmentPlans::class);
+    }
 }

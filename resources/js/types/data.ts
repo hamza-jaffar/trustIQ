@@ -30,23 +30,23 @@ export interface Permission {
 }
 
 export interface Customer {
-    id: string;
+    id: number;
     first_name: string;
     last_name: string;
     cnic: string;
-    email: string;
     phone: string;
-    dob: string;
-    gender: string;
-    occupation: string;
-    verification_status: "verified" | "pending" | "rejected";
-    monthly_income: string;
+    email: string;
+    dob: string | null;
+    gender: 'male' | 'female' | 'other';
+    address: string;
     city: string;
     province: string;
     country: string;
-    address: string;
-    email_confirm_at: string;
-    phone_confirm_at: string;
+    occupation: string;
+    monthly_income: string;
+    verification_status: 'pending' | 'verified' | 'rejected';
+    email_confirm_at: string | null;
+    phone_confirm_at: string | null;
     created_at: string;
     updated_at: string;
 }

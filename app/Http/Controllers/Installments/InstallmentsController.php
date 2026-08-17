@@ -15,8 +15,10 @@ class InstallmentsController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $installments = InstallmentPlans::where('organization_id', auth()->user()->organization()->value('organizations.id'))->orWhere('created_by_user_id', auth()->user()->id)->get();
+
         return Inertia::render('installments/index');
     }
 
@@ -69,7 +71,7 @@ class InstallmentsController extends Controller
 
             $installment = InstallmentPlans::create([
                 'created_by_user_id' => auth()->user()->id ?? null,
-                'organization_id' => auth()->user()->organization()->id ?? null,
+                'organization_id' => auth()->user()->organization()->value('organizations.id') ?? null,
                 'customer_id' => $validated['customer_id'],
                 'item_reference' => $validated['item_reference'],
                 'total_price' => $totalPrice,
