@@ -4,7 +4,6 @@ import { Customer } from '@/types/data';
 import { Form, Link } from '@inertiajs/react';
 import { create, index, update } from '@/routes/customers';
 import { Button } from '@/components/ui/button';
-import InputError from '@/components/input-error';
 import ColorfulRow from './colorful-row';
 import installments from '@/routes/installments';
 
@@ -32,10 +31,10 @@ const CustomerProfile = ({ customer }: { customer: Customer }) => {
     const status = statusMap[customer.verification_status];
 
     return (
-        <div className="w-full max-w-7xl mx-auto space-y-6 p-4 bg-zinc-50/50 dark:bg-zinc-950 rounded-2xl">
+        <div className="w-full max-w-7xl mx-auto space-y-6 p-4 rounded-2xl">
 
             {/* Header Identity Card with Modern Gradient Background */}
-            <div className="relative overflow-hidden bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 p-6 md:p-8 rounded-2xl shadow-xl text-white">
+            <div className="relative overflow-hidden bg-linear-to-r from-indigo-600 via-purple-600 to-pink-600 p-6 md:p-8 rounded-2xl shadow-xl text-white">
                 <div className="absolute top-0 right-0 -mt-6 -mr-6 w-32 h-32 bg-white/10 rounded-full blur-2xl pointer-events-none"></div>
                 <div className="absolute bottom-0 left-1/3 -mb-10 w-48 h-48 bg-purple-500/20 rounded-full blur-3xl pointer-events-none"></div>
 
@@ -69,7 +68,7 @@ const CustomerProfile = ({ customer }: { customer: Customer }) => {
 
                 {/* Left Column: Personal and Financial Profile (60%) */}
                 <div className="lg:col-span-3 space-y-4">
-                    <div className="p-5 rounded-2xl bg-gradient-to-br from-indigo-500/5 to-purple-500/5 border border-indigo-100/50 dark:border-indigo-950/40 space-y-4">
+                    <div className="p-5 rounded-2xl bg-linear-to-br from-indigo-500/5 to-purple-500/5 border border-indigo-100/50 dark:border-indigo-950/40 space-y-4">
                         <div className="flex items-center gap-2 pb-2 border-b border-indigo-100/30">
                             <User className="h-5 w-5 text-indigo-500" />
                             <h2 className="font-bold text-lg text-indigo-950 dark:text-indigo-300">Personal & Financial Profile</h2>
@@ -87,7 +86,7 @@ const CustomerProfile = ({ customer }: { customer: Customer }) => {
                 <div className="lg:col-span-2 space-y-6">
 
                     {/* Communications Box */}
-                    <div className="p-5 rounded-2xl bg-gradient-to-br from-pink-500/5 to-rose-500/5 border border-pink-100/50 dark:border-pink-950/40 space-y-4">
+                    <div className="p-5 rounded-2xl bg-linear-to-br from-pink-500/5 to-rose-500/5 border border-pink-100/50 dark:border-pink-950/40 space-y-4">
                         <div className="flex items-center gap-2 pb-2 border-b border-pink-100/30">
                             <Phone className="h-5 w-5 text-pink-500" />
                             <h2 className="font-bold text-lg text-pink-950 dark:text-pink-300">Contact Details</h2>
@@ -113,7 +112,7 @@ const CustomerProfile = ({ customer }: { customer: Customer }) => {
                     </div>
 
                     {/* Geography Address Box */}
-                    <div className="p-5 rounded-2xl bg-gradient-to-br from-cyan-500/5 to-blue-500/5 border border-cyan-100/50 dark:border-cyan-950/40 space-y-4">
+                    <div className="p-5 rounded-2xl bg-linear-to-br from-cyan-500/5 to-blue-500/5 border border-cyan-100/50 dark:border-cyan-950/40 space-y-4">
                         <div className="flex items-center gap-2 pb-2 border-b border-cyan-100/30">
                             <MapPin className="h-5 w-5 text-cyan-500" />
                             <h2 className="font-bold text-lg text-cyan-950 dark:text-cyan-300">Address Information</h2>

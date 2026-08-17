@@ -71,4 +71,12 @@ class User extends Authenticatable implements PasskeyUser
     {
         return $this->hasMany(InstallmentPlans::class);
     }
+
+    public function createdInstallments()
+{
+    return $this->hasMany(
+        InstallmentPlans::class,
+        'created_by_user_id'
+    );
+}
 }

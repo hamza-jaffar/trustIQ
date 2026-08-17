@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Installment\CreateInstallmentRequest;
 use App\Models\Customer;
 use App\Models\InstallmentPlans;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
@@ -17,9 +18,154 @@ class InstallmentsController extends Controller
      */
     public function index(Request $request)
     {
-        $installments = InstallmentPlans::where('organization_id', auth()->user()->organization()->value('organizations.id'))->orWhere('created_by_user_id', auth()->user()->id)->get();
+        $user = auth()->user();
 
-        return Inertia::render('installments/index');
+        $organizationId = $user
+            ->organization()
+            ->value('organizations.id');
+
+        $search = $request->string('search')->trim()->toString();
+        $status = $request->string('status')->toString();
+        $frequency = $request->string('frequency')->toString();
+        $createdBy = $request->input('created_by');
+        $startDateFrom = $request->input('start_date_from');
+        $startDateTo = $request->input('start_date_to');
+        $minPrice = $request->input('min_price');
+        $maxPrice = $request->input('max_price');
+        $minFinanced = $request->input('min_financed');
+        $maxFinanced = $request->input('max_financed');
+        $minPayable = $request->input('min_payable');
+        $maxPayable = $request->input('max_payable');
+        $sort = $request->input('sort', 'created_at');
+        $direction = $request->input('direction', 'desc');
+        $allowedSorts = [
+            'id',
+            'item_reference',
+            'total_price',
+            'down_payment',
+            'financed_amount',
+            'flat_markup',
+            'total_payable',
+            'frequency',
+            'status',
+            'start_date',
+            'created_at',
+        ];
+
+        if (! in_array($sort, $allowedSorts, true)) {
+            $sort = 'created_at';
+        }
+
+        if (! in_array($direction, ['asc', 'desc'], true)) {
+            $direction = 'desc';
+        }
+
+        $perPage = (int) $request->input('per_page', 15);
+
+        $allowedPerPage = [10, 15, 25, 50, 100];
+
+        if (! in_array($perPage, $allowedPerPage, true)) {
+            $perPage = 15;
+        }
+        $installments = InstallmentPlans::query()
+            ->where(function ($query) use ($organizationId, $user) {
+                $query
+                    ->where('organization_id', $organizationId)
+                    ->orWhere('created_by_user_id', $user->id);
+            })
+            ->with([
+                'customer:id,first_name,last_name,cnic,phone,email',
+                'createdBy:id,first_name,last_name,email',
+            ])
+            ->when($search, function ($query) use ($search) {
+                $query->where(function ($query) use ($search) {
+                    $query
+                        ->where('item_reference', 'like', "%{$search}%")
+                        ->orWhereHas('customer', function ($query) use ($search) {
+                            $query
+                                ->where('first_name', 'like', "%{$search}%")
+                                ->orWhere('last_name', 'like', "%{$search}%")
+                                ->orWhereRaw(
+                                    "CONCAT(first_name, ' ', last_name) LIKE ?",
+                                    ["%{$search}%"]
+                                )
+                                ->orWhere('cnic', 'like', "%{$search}%")
+                                ->orWhere('phone', 'like', "%{$search}%")
+                                ->orWhere('email', 'like', "%{$search}%");
+                        });
+                });
+            })
+            ->when($status, function ($query) use ($status) {
+                $query->where('status', $status);
+            })
+            ->when($frequency, function ($query) use ($frequency) {
+                $query->where('frequency', $frequency);
+            })
+            ->when($createdBy, function ($query) use ($createdBy) {
+                $query->where('created_by_user_id', $createdBy);
+            })
+            ->when($startDateFrom, function ($query) use ($startDateFrom) {
+                $query->whereDate('start_date', '>=', $startDateFrom);
+            })
+            ->when($startDateTo, function ($query) use ($startDateTo) {
+                $query->whereDate('start_date', '<=', $startDateTo);
+            })
+            ->when($minPrice !== null && $minPrice !== '', function ($query) use ($minPrice) {
+                $query->where('total_price', '>=', $minPrice);
+            })
+            ->when($maxPrice !== null && $maxPrice !== '', function ($query) use ($maxPrice) {
+                $query->where('total_price', '<=', $maxPrice);
+            })
+            ->when($minFinanced !== null && $minFinanced !== '', function ($query) use ($minFinanced) {
+                $query->where('financed_amount', '>=', $minFinanced);
+            })
+            ->when($maxFinanced !== null && $maxFinanced !== '', function ($query) use ($maxFinanced) {
+                $query->where('financed_amount', '<=', $maxFinanced);
+            })
+            ->when($minPayable !== null && $minPayable !== '', function ($query) use ($minPayable) {
+                $query->where('total_payable', '>=', $minPayable);
+            })
+            ->when($maxPayable !== null && $maxPayable !== '', function ($query) use ($maxPayable) {
+                $query->where('total_payable', '<=', $maxPayable);
+            })
+            ->orderBy($sort, $direction)
+            ->paginate($perPage)
+            ->withQueryString();
+
+        $users = User::query()
+            ->whereHas('createdInstallments', function ($query) use ($organizationId) {
+                $query->where('organization_id', $organizationId);
+            })
+            ->select('id', 'first_name', 'last_name')
+            ->orderBy('first_name')
+            ->orderBy('last_name')
+            ->get();
+
+        return Inertia::render('installments/index', [
+            'installments' => $installments,
+
+            'filters' => [
+                'search' => $search,
+                'status' => $status,
+                'frequency' => $frequency,
+                'created_by' => $createdBy,
+                'start_date_from' => $startDateFrom,
+                'start_date_to' => $startDateTo,
+                'min_price' => $minPrice,
+                'max_price' => $maxPrice,
+                'min_financed' => $minFinanced,
+                'max_financed' => $maxFinanced,
+                'min_payable' => $minPayable,
+                'max_payable' => $maxPayable,
+                'sort' => $sort,
+                'direction' => $direction,
+                'per_page' => $perPage,
+            ],
+
+            'filterOptions' => [
+                'users' => $users,
+            ],
+        ]);
     }
 
     /**

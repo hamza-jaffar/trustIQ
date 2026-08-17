@@ -60,3 +60,34 @@ export type Guarantor = {
     relationship: string
     monthly_income: string
 }
+
+export interface Installment {
+    id: number | string;
+    organization_id: number | null;
+    customer_id: number | null;
+    created_by_user_id: number | null;
+    item_reference: string | null;
+    total_price: string | null;
+    down_payment: string | null;
+    financed_amount: string | null;
+    flat_markup: string | null;
+    total_payable: string | null;
+    frequency: string;
+    status: string;
+    start_date: string | null;
+    created_at: string;
+    updated_at: string;
+    customer?: {
+        id: number;
+        first_name: string;
+        last_name: string;
+        cnic: string;
+        phone: string;
+        email: string;
+    };
+    created_by?: {
+        id: number;
+        name: string;
+        email: string;
+    };
+}

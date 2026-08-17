@@ -22,7 +22,7 @@ const ColorfulRow = ({
     accentClass?: string;
     editable?: boolean;
     name?: string;
-    customerId: string;
+    customerId: number;
 }) => {
     const [isEditing, setIsEditing] = useState(false);
     const [value, setValue] = useState(data ?? "");
