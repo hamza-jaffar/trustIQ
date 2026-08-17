@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { ShieldCheck, ShieldAlert, ShieldQuestion, User, Phone, MapPin, Briefcase, PenBoxIcon, Mail, Calendar, Check, Currency, Plus, MoveLeft } from 'lucide-react'
 import { Customer } from '@/types/data';
-import { Form, Link } from '@inertiajs/react';
+import { Form, Link, usePage } from '@inertiajs/react';
 import { create, index, update } from '@/routes/customers';
 import { Button } from '@/components/ui/button';
 import ColorfulRow from './colorful-row';
@@ -10,9 +10,8 @@ import ProfileInstallment from './installments';
 
 const CustomerProfile = ({ customer }: { customer: Customer }) => {
 
-    console.log(customer);
+    const { currency } = usePage().props;
 
-    // Colorful Badge configuration matching Laravel verification status
     const statusMap = {
         verified: {
             bg: "bg-emerald-500/10 border-emerald-500/30 text-emerald-600 dark:text-emerald-400",
@@ -80,7 +79,7 @@ const CustomerProfile = ({ customer }: { customer: Customer }) => {
                             <ColorfulRow customerId={customer.id} title="Date of Birth" data={customer.dob} icon={Calendar} accentClass="bg-indigo-50 text-indigo-500 dark:bg-indigo-950/40" />
                             <ColorfulRow customerId={customer.id} title="Gender" data={customer.gender.toUpperCase()} icon={User} accentClass="bg-indigo-50 text-indigo-500 dark:bg-indigo-950/40" />
                             <ColorfulRow customerId={customer.id} title="Occupation" editable name="occupation" data={customer.occupation} icon={Briefcase} accentClass="bg-purple-50 text-purple-500 dark:bg-purple-950/40" />
-                            <ColorfulRow customerId={customer.id} title="Monthly Income" editable name='monthly_income' data={customer.monthly_income} icon={Currency} accentClass="bg-emerald-50 text-emerald-500 dark:bg-emerald-950/40" />
+                            <ColorfulRow customerId={customer.id} title="Monthly Income" editable name='monthly_income' data={`${currency.symbol} ${customer.monthly_income}`} icon={Currency} accentClass="bg-emerald-50 text-emerald-500 dark:bg-emerald-950/40" />
                         </div>
                     </div>
                     <div className="p-5 rounded-2xl bg-linear-to-br from-indigo-500/5 to-purple-500/5 border border-indigo-100/50 dark:border-indigo-950/40 ">

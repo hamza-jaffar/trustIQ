@@ -1,7 +1,7 @@
 import {
     Installment
 } from '@/types/data';
-import { Link, router } from '@inertiajs/react';
+import { Link, router, usePage } from '@inertiajs/react';
 import React, { useEffect, useState } from 'react';
 import {
     Search,
@@ -19,7 +19,7 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
-import { index } from '@/routes/installments';
+import { index, show } from '@/routes/installments';
 import { PaginatedInstallments } from '@/types/pagination';
 import { InstallmentFilters } from '@/types/filters';
 import { profile } from '@/routes/customers';
@@ -42,12 +42,7 @@ const InstallmentTable = ({
     filterOptions,
 }: Props) => {
     const [search, setSearch] = useState(filters.search ?? '');
-
-    /*
-    |--------------------------------------------------------------------------
-    | Debounced Search
-    |--------------------------------------------------------------------------
-    */
+    const { currency } = usePage().props;
 
     useEffect(() => {
         const timeout = setTimeout(() => {
@@ -64,12 +59,6 @@ const InstallmentTable = ({
         return () => clearTimeout(timeout);
     }, [search]);
 
-    /*
-    |--------------------------------------------------------------------------
-    | Update Filters
-    |--------------------------------------------------------------------------
-    */
-
     const updateFilters = (values: Record<string, any>) => {
         router.get(
             index(),
@@ -85,12 +74,6 @@ const InstallmentTable = ({
         );
     };
 
-    /*
-    |--------------------------------------------------------------------------
-    | Reset
-    |--------------------------------------------------------------------------
-    */
-
     const resetFilters = () => {
         setSearch('');
 
@@ -105,12 +88,6 @@ const InstallmentTable = ({
         );
     };
 
-    /*
-    |--------------------------------------------------------------------------
-    | Sorting
-    |--------------------------------------------------------------------------
-    */
-
     const sortBy = (column: string) => {
         const direction =
             filters.sort === column &&
@@ -124,12 +101,6 @@ const InstallmentTable = ({
             page: 1,
         });
     };
-
-    /*
-    |--------------------------------------------------------------------------
-    | Sort Icon
-    |--------------------------------------------------------------------------
-    */
 
     const sortIcon = (column: string) => {
         if (filters.sort !== column) {
@@ -172,8 +143,6 @@ const InstallmentTable = ({
             <div className="rounded-xl border bg-background p-4 shadow-sm">
                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
 
-                    {/* Search */}
-
                     <div className="lg:col-span-2">
                         <label className="mb-1.5 block text-sm font-medium">
                             Search
@@ -192,8 +161,6 @@ const InstallmentTable = ({
                             />
                         </div>
                     </div>
-
-                    {/* Status */}
 
                     <div>
                         <label className="mb-1.5 block text-sm font-medium">
@@ -730,7 +697,7 @@ const InstallmentTable = ({
                                         >
 
                                             {/* Customer */}
-                                            <Link href={profile({cnic: installment.customer?.cnic ?? ''})}>
+                                            <Link href={profile({ cnic: installment.customer?.cnic ?? '' })}>
                                                 <td className="whitespace-nowrap px-6 py-4">
                                                     <div className="font-medium">
                                                         {
@@ -776,7 +743,7 @@ const InstallmentTable = ({
                                             {/* Price */}
 
                                             <td className="whitespace-nowrap px-6 py-4">
-                                                {Number(
+                                                {currency.symbol} {Number(
                                                     installment.total_price ??
                                                     0,
                                                 ).toLocaleString()}
@@ -785,7 +752,7 @@ const InstallmentTable = ({
                                             {/* Financed */}
 
                                             <td className="whitespace-nowrap px-6 py-4">
-                                                {Number(
+                                                {currency.symbol} {Number(
                                                     installment.financed_amount ??
                                                     0,
                                                 ).toLocaleString()}
@@ -794,7 +761,7 @@ const InstallmentTable = ({
                                             {/* Payable */}
 
                                             <td className="whitespace-nowrap px-6 py-4 font-medium">
-                                                {Number(
+                                                {currency.symbol} {Number(
                                                     installment.total_payable ??
                                                     0,
                                                 ).toLocaleString()}
@@ -835,22 +802,22 @@ const InstallmentTable = ({
                                             {/* Action */}
 
                                             <td className="px-6 py-4 text-right">
-
-                                                <Button
-                                                    variant="ghost"
-                                                    size="sm"
-                                                    className="gap-2"
-                                                    onClick={() =>
-                                                        console.log(
-                                                            'View',
-                                                            installment,
-                                                        )
-                                                    }
-                                                >
-                                                    <Eye className="h-4 w-4" />
-
-                                                    View
-                                                </Button>
+                                                <Link href={show({ id: installment.id })}>
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="sm"
+                                                        className="gap-2"
+                                                        onClick={() =>
+                                                            console.log(
+                                                                'View',
+                                                                installment,
+                                                            )
+                                                        }
+                                                    >
+                                                        <Eye className="h-4 w-4" />
+                                                        View
+                                                    </Button>
+                                                </Link>
 
                                             </td>
 

@@ -46,7 +46,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/', [InstallmentsController::class, 'index'])->name('.index');
         Route::get('/create', [InstallmentsController::class, 'create'])->name('.create');
         Route::post('/store', [InstallmentsController::class, 'store'])->name('.store');
-
+        Route::get('/{id}', [InstallmentsController::class, 'show'])->name('.show');
     });
 
 });

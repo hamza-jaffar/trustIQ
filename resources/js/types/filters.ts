@@ -15,3 +15,23 @@ export interface InstallmentFilters {
     direction: string;
     per_page: number;
 }
+
+export interface CustomerFilters {
+    search: string;
+    verification_status: string;
+    gender: string;
+    city: string;
+    province: string;
+    min_income: string | number | null;
+    max_income: string | number | null;
+    email_verified: string;
+    phone_verified: string;
+    sort: string;
+    direction: string;
+    per_page: number;
+}
+
+export interface CustomerFilterOptions {
+    cities: string[];
+    provinces: string[];
+}

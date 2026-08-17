@@ -4,7 +4,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { profile } from '@/routes/customers';
 import { Customer } from '@/types/data';
 import { PaginatedCustomers } from '@/types/pagination';
-import { Link, router } from '@inertiajs/react';
+import { Link, router, usePage } from '@inertiajs/react';
 import { RotateCcw, Search } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 
@@ -522,7 +522,7 @@ const CustomerTable = ({
                                             <Link href={profile({ cnic: customer.cnic })}>
                                                 <button
                                                     type="button"
-                                                    className="text-sm font-medium text-indigo-600 hover:text-indigo-800"
+                                                    className="text-sm font-medium text-primary hover:underline cursor-pointer"
                                                 >
                                                     View
                                                 </button>
@@ -581,7 +581,7 @@ const CustomerTable = ({
                                     );
                                 }}
                                 className={`rounded-lg px-3 py-2 text-sm ${link.active
-                                    ? 'bg-indigo-600 text-white'
+                                    ? 'bg-primary text-white'
                                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                                     } disabled:cursor-not-allowed disabled:opacity-50`}
                                 dangerouslySetInnerHTML={{

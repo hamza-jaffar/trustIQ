@@ -38,7 +38,7 @@ class HandleInertiaRequests extends Middleware
     {
         $user = $request->user();
         $organizationUser = null;
-        if($user) {
+        if ($user) {
             $organizationUser = OrganizationUser::where('user_id', $user->id)->first() ?? null;
         }
 
@@ -49,6 +49,15 @@ class HandleInertiaRequests extends Middleware
             'name' => config('app.name'),
             'auth' => [
                 'user' => $user,
+            ],
+            'currency' => [
+                'code' => 'USD',
+                'symbol' => '$',
+                'name' => 'US Dollar',
+                'position' => 'before',
+                'decimal_places' => 2,
+                'decimal_separator' => '.',
+                'thousand_separator' => ',',
             ],
             'permissions' => $permissions,
             'organization' => $organizationUser ? $organizationUser->organization : null,

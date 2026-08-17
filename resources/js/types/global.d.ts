@@ -8,11 +8,22 @@ declare module 'react' {
     }
 }
 
+interface CurrencyConfiguration {
+    code: string;
+    name: string;
+    symbol: string;
+    position: 'before' | 'after';
+    decimalPlaces: number;
+    decimalSeparator: string;
+    thousandSeparator: string;
+}
+
 declare module '@inertiajs/core' {
     export interface InertiaConfig {
         sharedPageProps: {
             name: string;
             auth: Auth;
+            currency: CurrencyConfiguration,
             sidebarOpen: boolean;
             permissions: string[];
             organization?: Organization;

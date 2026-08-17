@@ -3,32 +3,9 @@ import { Button } from '@/components/ui/button';
 import { create, index } from '@/routes/customers';
 import { Link } from '@inertiajs/react';
 import { Plus } from 'lucide-react';
-import React from 'react';
 import CustomerTable from './table';
-import {
-  Customer,
-} from '@/types/data';
 import { PaginatedCustomers } from '@/types/pagination';
-
-interface CustomerFilters {
-  search: string;
-  verification_status: string;
-  gender: string;
-  city: string;
-  province: string;
-  min_income: string | number | null;
-  max_income: string | number | null;
-  email_verified: string;
-  phone_verified: string;
-  sort: string;
-  direction: string;
-  per_page: number;
-}
-
-interface CustomerFilterOptions {
-  cities: string[];
-  provinces: string[];
-}
+import { CustomerFilterOptions, CustomerFilters } from '@/types/filters';
 
 interface CustomerIndexProps {
   customers: PaginatedCustomers;

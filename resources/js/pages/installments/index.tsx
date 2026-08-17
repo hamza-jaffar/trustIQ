@@ -3,7 +3,6 @@ import { Button } from '@/components/ui/button';
 import installments from '@/routes/installments';
 import { Link } from '@inertiajs/react';
 import { Plus } from 'lucide-react';
-import React from 'react';
 import InstallmentTable from './table';
 import { PaginatedInstallments } from '@/types/pagination';
 import { InstallmentFilters } from '@/types/filters';

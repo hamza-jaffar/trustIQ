@@ -252,7 +252,9 @@ class InstallmentsController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $installment = InstallmentPlans::findOrFail($id);
+        
+        dd($installment);
     }
 
     /**
