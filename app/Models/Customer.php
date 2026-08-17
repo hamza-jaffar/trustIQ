@@ -18,7 +18,7 @@ class Customer extends Model
 
     public function isVerified(): bool
     {
-        return !is_null($this->email_confirm_at);
+        return ! is_null($this->email_confirm_at);
     }
 
     public function installmentPlans()
@@ -29,5 +29,11 @@ class Customer extends Model
     public function installments()
     {
         return $this->hasMany(InstallmentPlans::class);
+    }
+
+    public function activeOrPendingInstallments()
+    {
+        return $this->hasMany(InstallmentPlans::class)
+            ->whereIn('status', ['active', 'pending_approval']);
     }
 }

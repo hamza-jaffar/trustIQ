@@ -40,6 +40,7 @@ export interface Customer {
     gender: 'male' | 'female' | 'other';
     address: string;
     city: string;
+    active_or_pending_installments?: Installment[];
     province: string;
     country: string;
     occupation: string;

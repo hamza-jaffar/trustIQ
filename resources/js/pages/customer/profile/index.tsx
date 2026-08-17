@@ -1,14 +1,17 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { ShieldCheck, ShieldAlert, ShieldQuestion, User, Phone, MapPin, Briefcase, PenBoxIcon, Mail, Calendar, Check, Currency, Plus } from 'lucide-react'
+import { ShieldCheck, ShieldAlert, ShieldQuestion, User, Phone, MapPin, Briefcase, PenBoxIcon, Mail, Calendar, Check, Currency, Plus, MoveLeft } from 'lucide-react'
 import { Customer } from '@/types/data';
 import { Form, Link } from '@inertiajs/react';
 import { create, index, update } from '@/routes/customers';
 import { Button } from '@/components/ui/button';
 import ColorfulRow from './colorful-row';
 import installments from '@/routes/installments';
-
+import ProfileInstallment from './installments';
 
 const CustomerProfile = ({ customer }: { customer: Customer }) => {
+
+    console.log(customer);
+
     // Colorful Badge configuration matching Laravel verification status
     const statusMap = {
         verified: {
@@ -79,6 +82,25 @@ const CustomerProfile = ({ customer }: { customer: Customer }) => {
                             <ColorfulRow customerId={customer.id} title="Occupation" editable name="occupation" data={customer.occupation} icon={Briefcase} accentClass="bg-purple-50 text-purple-500 dark:bg-purple-950/40" />
                             <ColorfulRow customerId={customer.id} title="Monthly Income" editable name='monthly_income' data={customer.monthly_income} icon={Currency} accentClass="bg-emerald-50 text-emerald-500 dark:bg-emerald-950/40" />
                         </div>
+                    </div>
+                    <div className="p-5 rounded-2xl bg-linear-to-br from-indigo-500/5 to-purple-500/5 border border-indigo-100/50 dark:border-indigo-950/40 ">
+                        {customer.active_or_pending_installments ?
+                            <div className='space-y-4'>
+                                {customer.active_or_pending_installments?.map((installment) => (
+                                    <div key={installment.id}>
+                                        <ProfileInstallment installment={installment} />
+                                    </div>
+                                ))}
+                                <Link href={installments.index({
+                                    query: {
+                                        search: customer.cnic
+                                    }
+                                })} className='hover:underline text-xs flex gap-2 justify-center'> <MoveLeft size={15} /> View all installments</Link>
+                            </div>
+                            : <div className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-gray-50 px-3 py-1.5 text-sm font-medium text-gray-600">
+                                <span className="h-2 w-2 rounded-full bg-gray-400" />
+                                No Active or Approval Pending Installment
+                            </div>}
                     </div>
                 </div>
 

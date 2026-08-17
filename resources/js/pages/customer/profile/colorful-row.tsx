@@ -84,7 +84,7 @@ const ColorfulRow = ({
                     className="
                         flex flex-col sm:flex-row sm:items-center
                         justify-between p-4 rounded-xl
-                        bg-white dark:bg-zinc-900
+                        bg-background
                         border border-zinc-100 dark:border-zinc-800
                         shadow-sm hover:shadow-md
                         hover:border-indigo-100
@@ -183,7 +183,7 @@ const ColorfulRow = ({
                                     }}
                                     className="
                                         mt-1.5 sm:mt-0
-                                        w-full sm:w-auto min-w-[200px]
+                                        w-full sm:w-auto min-w-50
                                         px-2 py-1
                                         text-base font-bold
                                         text-zinc-800 dark:text-zinc-100
@@ -211,10 +211,9 @@ const ColorfulRow = ({
                                     text-zinc-800 dark:text-zinc-100
                                     mt-1.5 sm:mt-0
                                     px-2 py-0.5 rounded
-                                    ${
-                                        editable
-                                            ? "cursor-pointer hover:bg-zinc-50 dark:hover:bg-zinc-800"
-                                            : "cursor-text"
+                                    ${editable
+                                        ? "cursor-pointer hover:bg-zinc-50 dark:hover:bg-zinc-800"
+                                        : "cursor-text"
                                     }
                                 `}
                             >

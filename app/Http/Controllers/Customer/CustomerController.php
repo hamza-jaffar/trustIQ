@@ -36,12 +36,6 @@ class CustomerController extends Controller
         $direction = $request->input('direction', 'desc');
         $perPage = min((int) $request->input('per_page', 15), 100);
 
-        /*
-        |--------------------------------------------------------------------------
-        | Allowed sorting columns
-        |--------------------------------------------------------------------------
-        */
-
         $allowedSorts = [
             'first_name',
             'last_name',
@@ -59,23 +53,10 @@ class CustomerController extends Controller
             $direction = 'desc';
         }
 
-        /*
-        |--------------------------------------------------------------------------
-        | Query
-        |--------------------------------------------------------------------------
-        */
-
         $customers = Customer::query()
             ->whereHas('installments', function ($query) use ($organizationId) {
                 $query->where('organization_id', $organizationId);
             })
-
-            /*
-            |--------------------------------------------------------------------------
-            | Global Search
-            |--------------------------------------------------------------------------
-            */
-
             ->when($search, function ($query) use ($search) {
                 $query->where(function ($query) use ($search) {
                     $query
@@ -94,43 +75,30 @@ class CustomerController extends Controller
                         ->orWhere('occupation', 'like', "%{$search}%");
                 });
             })
-
-            /*
-            |--------------------------------------------------------------------------
-            | Filters
-            |--------------------------------------------------------------------------
-            */
-
             ->when($verificationStatus, function ($query) use ($verificationStatus) {
                 $query->where('verification_status', $verificationStatus);
             })
-
             ->when($gender, function ($query) use ($gender) {
                 $query->where('gender', $gender);
             })
-
             ->when($city, function ($query) use ($city) {
                 $query->where('city', 'like', "%{$city}%");
             })
-
             ->when($province, function ($query) use ($province) {
                 $query->where('province', 'like', "%{$province}%");
             })
-
             ->when($minIncome !== null && $minIncome !== '', function ($query) use ($minIncome) {
                 $query->whereRaw(
                     'CAST(monthly_income AS DECIMAL(15,2)) >= ?',
                     [(float) $minIncome]
                 );
             })
-
             ->when($maxIncome !== null && $maxIncome !== '', function ($query) use ($maxIncome) {
                 $query->whereRaw(
                     'CAST(monthly_income AS DECIMAL(15,2)) <= ?',
                     [(float) $maxIncome]
                 );
             })
-
             ->when($emailVerified !== null && $emailVerified !== '', function ($query) use ($emailVerified) {
                 if ($emailVerified === 'verified') {
                     $query->whereNotNull('email_confirm_at');
@@ -140,7 +108,6 @@ class CustomerController extends Controller
                     $query->whereNull('email_confirm_at');
                 }
             })
-
             ->when($phoneVerified !== null && $phoneVerified !== '', function ($query) use ($phoneVerified) {
                 if ($phoneVerified === 'verified') {
                     $query->whereNotNull('phone_confirm_at');
@@ -150,29 +117,9 @@ class CustomerController extends Controller
                     $query->whereNull('phone_confirm_at');
                 }
             })
-
-            /*
-            |--------------------------------------------------------------------------
-            | Sorting
-            |--------------------------------------------------------------------------
-            */
-
             ->orderBy($sort, $direction)
-
-            /*
-            |--------------------------------------------------------------------------
-            | Pagination
-            |--------------------------------------------------------------------------
-            */
-
             ->paginate($perPage)
             ->withQueryString();
-
-        /*
-        |--------------------------------------------------------------------------
-        | Filter Options
-        |--------------------------------------------------------------------------
-        */
 
         $cities = Customer::query()
             ->whereHas('installments', function ($query) use ($organizationId) {
@@ -271,13 +218,15 @@ class CustomerController extends Controller
         return response()->json(['message' => 'Customer not found', 'status' => false], 404);
     }
 
-    // public function
-
     public function profile(string $cnic)
     {
-        $customer = Customer::where('cnic', $cnic)->first();
-
-        // dd($customer->isVerified());
+        $customer = Customer::where('cnic', $cnic)->with([
+            'activeOrPendingInstallments' => function ($query) {
+                $query
+                    ->latest()
+                    ->limit(3);
+            },
+        ])->first();
 
         return Inertia::render('customer/profile/index', ['customer' => $customer]);
     }
