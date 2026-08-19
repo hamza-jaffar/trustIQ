@@ -222,11 +222,13 @@ class CustomerController extends Controller
     {
         $customer = Customer::where('cnic', $cnic)->with([
             'activeOrPendingInstallments' => function ($query) {
-                $query
-                    ->latest()
-                    ->limit(3);
+                $query->latest()->limit(4);
             },
         ])->first();
+
+        if ($customer) {
+            $customer->installment_counts = $customer->installmentsNumber();
+        }
 
         return Inertia::render('customer/profile/index', ['customer' => $customer]);
     }

@@ -4,12 +4,15 @@ namespace App\Http\Controllers\Installments;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Installment\CreateInstallmentRequest;
+use App\Http\Requests\Installment\UpdateInstallmentRequest;
 use App\Models\Customer;
 use App\Models\InstallmentPlans;
 use App\Models\User;
+use App\Enum\InstallmentStatus;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
+use Illuminate\Validation\Rule;
 
 class InstallmentsController extends Controller
 {
@@ -223,15 +226,16 @@ class InstallmentsController extends Controller
                 'total_price' => $totalPrice,
                 'down_payment' => $downPayment,
                 'financed_amount' => $financedAmount,
+                'installment_amount' => $validated['installment_amount'],
                 'flat_markup' => $flatMarkup,
                 'total_payable' => $totalPayable,
                 'frequency' => $validated['frequency'],
-                'start_date' => $validated['start_date'],
+                'start_date' => null, // Will be set when status becomes active
             ]);
 
             foreach ($validated['guarantors'] as $guarantor) {
                 $installment->guarantors()->create([
-                    'customer_id' => $guarantor['customer_id'] ?? null,
+                    'customer_id' => $validated['customer_id'] ?? null,
                     'full_name' => $guarantor['full_name'] ?? null,
                     'cnic' => $guarantor['cnic'] ?? null,
                     'phone' => $guarantor['phone'] ?? null,
@@ -252,9 +256,38 @@ class InstallmentsController extends Controller
      */
     public function show(string $id)
     {
-        $installment = InstallmentPlans::findOrFail($id);
+        $installment = InstallmentPlans::with([
+            'customer',
+            'createdBy:id,first_name,last_name,email',
+            'guarantors'
+        ])->findOrFail($id);
         
-        dd($installment);
+        return Inertia::render('installments/show', [
+            'installment' => $installment,
+            'statuses' => array_column(InstallmentStatus::cases(), 'value')
+        ]);
+    }
+
+    /**
+     * Update the status of the specified resource.
+     */
+    public function updateStatus(Request $request, string $id)
+    {
+        $installment = InstallmentPlans::findOrFail($id);
+
+        $validated = $request->validate([
+            'status' => ['required', Rule::enum(InstallmentStatus::class)],
+        ]);
+
+        if ($validated['status'] === InstallmentStatus::ACTIVE->value && !$installment->start_date) {
+            $installment->start_date = now();
+        }
+
+        $installment->update([
+            'status' => $validated['status'],
+        ]);
+
+        return redirect()->back()->with('success', 'Installment status updated successfully.');
     }
 
     /**
@@ -262,15 +295,78 @@ class InstallmentsController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $installment = InstallmentPlans::with('guarantors')->findOrFail($id);
+        
+        $customers = Customer::query()
+            ->select([
+                'id',
+                'first_name',
+                'last_name',
+                'phone',
+                'email',
+                'cnic',
+            ])
+            ->get();
+
+        return Inertia::render('installments/edit/index', [
+            'installment' => $installment,
+            'customers' => $customers,
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateInstallmentRequest $request, string $id)
     {
-        //
+        $installment = InstallmentPlans::findOrFail($id);
+        $validated = $request->validated();
+
+        DB::transaction(function () use ($validated, $installment) {
+            $totalPrice = (float) $validated['total_price'];
+            $downPayment = (float) $validated['down_payment'];
+
+            // Amount remaining after down payment
+            $financedAmount = $totalPrice - $downPayment;
+
+            // Example: 20% flat markup
+            $markupRate = 20;
+            $flatMarkup = $financedAmount * ($markupRate / 100);
+
+            // Total amount customer will pay through installments
+            $totalPayable = $financedAmount + $flatMarkup;
+
+            $installment->update([
+                'customer_id' => $validated['customer_id'],
+                'item_reference' => $validated['item_reference'],
+                'total_price' => $totalPrice,
+                'down_payment' => $downPayment,
+                'financed_amount' => $financedAmount,
+                'installment_amount' => $validated['installment_amount'],
+                'flat_markup' => $flatMarkup,
+                'total_payable' => $totalPayable,
+                'frequency' => $validated['frequency'],
+            ]);
+
+            // Re-create guarantors for simplicity (or update them)
+            $installment->guarantors()->delete();
+
+            foreach ($validated['guarantors'] as $guarantor) {
+                $installment->guarantors()->create([
+                    'customer_id' => $guarantor['customer_id'] ?? null,
+                    'full_name' => $guarantor['full_name'] ?? null,
+                    'cnic' => $guarantor['cnic'] ?? null,
+                    'phone' => $guarantor['phone'] ?? null,
+                    'address' => $guarantor['address'] ?? null,
+                    'relationship' => $guarantor['relationship'] ?? null,
+                    'monthly_income' => $guarantor['monthly_income'] ?? null,
+                ]);
+            }
+        });
+
+        return redirect()
+            ->route('installments.index')
+            ->with('success', 'Installment updated successfully.');
     }
 
     /**
@@ -278,6 +374,9 @@ class InstallmentsController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $installment = InstallmentPlans::findOrFail($id);
+        $installment->delete();
+
+        return redirect()->route('installments.index')->with('success', 'Installment deleted successfully.');
     }
 }

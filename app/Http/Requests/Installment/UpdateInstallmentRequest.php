@@ -5,7 +5,7 @@ namespace App\Http\Requests\Installment;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class CreateInstallmentRequest extends FormRequest
+class UpdateInstallmentRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -53,7 +53,7 @@ class CreateInstallmentRequest extends FormRequest
                 'min:0',
                 'lte:total_price',
             ],
-
+            
             'frequency' => [
                 'required',
                 'in:weekly,bi_weekly,monthly',
@@ -153,7 +153,8 @@ class CreateInstallmentRequest extends FormRequest
                         \App\Enum\InstallmentStatus::ACTIVE->value,
                         \App\Enum\InstallmentStatus::PENDING_APPROVAL->value
                     ]);
-                })->where(function($q) use ($cnics, $customerIds) {
+                })->where('installment_id', '!=', $this->route('id'))
+                  ->where(function($q) use ($cnics, $customerIds) {
                     if (count($cnics) > 0) {
                         $q->orWhereIn('cnic', $cnics);
                     }

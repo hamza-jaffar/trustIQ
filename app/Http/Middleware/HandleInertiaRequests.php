@@ -51,9 +51,9 @@ class HandleInertiaRequests extends Middleware
                 'user' => $user,
             ],
             'currency' => [
-                'code' => 'USD',
-                'symbol' => '$',
-                'name' => 'US Dollar',
+                'code' => 'PKR',
+                'symbol' => 'Rs.',
+                'name' => 'Pakistani Rupee',
                 'position' => 'before',
                 'decimal_places' => 2,
                 'decimal_separator' => '.',

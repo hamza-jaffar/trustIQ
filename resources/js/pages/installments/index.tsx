@@ -1,6 +1,6 @@
 import Heading from '@/components/heading';
 import { Button } from '@/components/ui/button';
-import installments from '@/routes/installments';
+import installments, { index } from '@/routes/installments';
 import { Link } from '@inertiajs/react';
 import { Plus } from 'lucide-react';
 import InstallmentTable from './table';
@@ -50,3 +50,12 @@ const InstallmentIndex = ({
 };
 
 export default InstallmentIndex;
+
+InstallmentIndex.layout = {
+    breadcrumbs: [
+        {
+            title: 'Installment',
+            href: index(),
+        },
+    ],
+};

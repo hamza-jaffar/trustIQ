@@ -36,4 +36,28 @@ class Customer extends Model
         return $this->hasMany(InstallmentPlans::class)
             ->whereIn('status', ['active', 'pending_approval']);
     }
+
+    public function installmentsNumber()
+    {
+        // Fetch collections for all individual statuses
+        $pending = $this->installments()->where('status', 'pending')->get();
+        $active = $this->installments()->where('status', 'active')->get();
+        $completed = $this->installments()->where('status', 'completed')->get();
+        $rejected = $this->installments()->where('status', 'rejected')->get();
+        $cancelled = $this->installments()->where('status', 'cancelled')->get();
+
+        return [
+            'pending' => $pending->count(),
+            'active' => $active->count(),
+            'completed' => $completed->count(),
+            'rejected' => $rejected->count(),
+            'cancelled' => $cancelled->count(),
+            'total' => $pending->count() + $active->count() + $completed->count() + $rejected->count() + $cancelled->count(),
+        ];
+    }
+
+    public function amountToBePaid()
+    {
+        // $amout = $this->installments()->where('status', 'active')
+    }
 }

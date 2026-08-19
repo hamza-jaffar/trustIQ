@@ -31,21 +31,26 @@ const emptyGuarantor = (): Guarantor => ({
     monthly_income: '',
 })
 
-const CreateInstallment = ({
-    customer_id,
+const EditInstallment = ({
+    installment,
     customers,
 }: {
-    customer_id?: string
+    installment: any
     customers: Customer[]
 }) => {
     const [customerId, setCustomerId] = useState<string>(
-        customer_id ?? ''
+        String(installment.customer_id)
     )
 
-    const [guarantors, setGuarantors] = useState<Guarantor[]>([
-        emptyGuarantor(),
-    ])
+    const [guarantors, setGuarantors] = useState<Guarantor[]>(
+        installment.guarantors && installment.guarantors.length > 0
+            ? installment.guarantors
+            : [emptyGuarantor()]
+    )
 
+    /*
+     * Add a new guarantor.
+     */
     const addGuarantor = () => {
         setGuarantors((prev) => [
             ...prev,
@@ -53,6 +58,12 @@ const CreateInstallment = ({
         ])
     }
 
+    /*
+     * Remove guarantor.
+     *
+     * We don't allow removing the last guarantor
+     * because at least one is required.
+     */
     const removeGuarantor = (index: number) => {
         if (guarantors.length <= 1) {
             return
@@ -63,6 +74,9 @@ const CreateInstallment = ({
         )
     }
 
+    /*
+     * Update a single guarantor field.
+     */
     const updateGuarantor = (
         index: number,
         field: keyof Guarantor,
@@ -80,6 +94,12 @@ const CreateInstallment = ({
         )
     }
 
+    /*
+     * Select an existing customer as guarantor.
+     *
+     * When a customer is selected, we automatically
+     * populate their basic information.
+     */
     const selectGuarantorCustomer = (
         index: number,
         value: string | number | null
@@ -118,14 +138,20 @@ const CreateInstallment = ({
     return (
         <div className="p-8">
             <Heading
-                title="Create Installment"
-                description="Create the new installment"
+                title="Edit Installment"
+                description="Edit the installment details"
             />
 
-            <Form {...installments.store.form()}>
+            <Form
+                action={`/installments/${installment.id}`}
+                method="put"
+            >
                 {({ processing, errors }) => (
                     <div className="flex w-full flex-col gap-6">
 
+                        {/* =====================================================
+                            CUSTOMER + ITEM REFERENCE
+                        ====================================================== */}
                         <div className="flex w-full flex-col gap-5 md:flex-row">
 
                             {/* Customer */}
@@ -164,6 +190,7 @@ const CreateInstallment = ({
                                 <Input
                                     id="item_reference"
                                     name="item_reference"
+                                    defaultValue={installment.item_reference}
                                     required
                                     placeholder="Enter the item reference number"
                                     tabIndex={1}
@@ -185,6 +212,7 @@ const CreateInstallment = ({
                                 <Select
                                     required
                                     name="frequency"
+                                    defaultValue={installment.frequency}
                                     disabled={processing}
                                 >
                                     <SelectTrigger
@@ -220,6 +248,7 @@ const CreateInstallment = ({
 
                         <div className="flex w-full flex-col gap-5 md:flex-row">
 
+                            {/* Product Price */}
                             <div className="flex w-full flex-col gap-2 md:w-1/2">
                                 <Label htmlFor="total_price">
                                     Product Price
@@ -229,6 +258,7 @@ const CreateInstallment = ({
                                     id="total_price"
                                     name="total_price"
                                     type="number"
+                                    defaultValue={installment.total_price}
                                     min="0"
                                     required
                                     placeholder="Enter the price of the product"
@@ -253,6 +283,7 @@ const CreateInstallment = ({
                                     id="down_payment"
                                     name="down_payment"
                                     type="number"
+                                    defaultValue={installment.down_payment}
                                     min="0"
                                     required
                                     placeholder="Enter the down payment paid by customer"
@@ -267,20 +298,20 @@ const CreateInstallment = ({
                                 />
                             </div>
 
-
                             <div className="flex w-full flex-col gap-2 md:w-1/2">
                                 <Label htmlFor="installment_amount">
-                                    Installment Amount
+                                    Down Payment
                                 </Label>
 
                                 <Input
                                     id="installment_amount"
                                     name="installment_amount"
                                     type="number"
+                                    defaultValue={installment.installment_amount}
                                     min="0"
                                     required
                                     placeholder="Enter the price customer pay "
-                                    tabIndex={2}
+                                    tabIndex={3}
                                     disabled={processing}
                                 />
 
@@ -292,9 +323,6 @@ const CreateInstallment = ({
                             </div>
                         </div>
 
-                        {/* =====================================================
-                            GUARANTORS
-                        ====================================================== */}
                         <section className="flex flex-col gap-5 rounded-xl border bg-card p-5">
 
                             {/* Header */}
@@ -694,4 +722,4 @@ const CreateInstallment = ({
     )
 }
 
-export default CreateInstallment
+export default EditInstallment

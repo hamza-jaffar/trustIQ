@@ -24,6 +24,7 @@ return new class extends Migration
             $table->decimal('financed_amount')->nullable();
             $table->decimal('flat_markup')->nullable();
             $table->decimal('total_payable')->nullable();
+            $table->decimal('installment_amount')->nullable();
             $table->enum('frequency',array_column(InstallmentFrequency::cases(), 'value'))->default(InstallmentFrequency::MONTHLY->value);
             $table->enum('status',array_column(InstallmentStatus::cases(), 'value'))->default(InstallmentStatus::PENDING_APPROVAL->value);
             $table->date('start_date')->nullable();

@@ -806,13 +806,7 @@ const InstallmentTable = ({
                                                     <Button
                                                         variant="ghost"
                                                         size="sm"
-                                                        className="gap-2"
-                                                        onClick={() =>
-                                                            console.log(
-                                                                'View',
-                                                                installment,
-                                                            )
-                                                        }
+                                                        className="gap-2 cursor-pointer"
                                                     >
                                                         <Eye className="h-4 w-4" />
                                                         View

@@ -5,7 +5,7 @@ import { profile } from '@/routes/customers';
 import { Customer } from '@/types/data';
 import { PaginatedCustomers } from '@/types/pagination';
 import { Link, router, usePage } from '@inertiajs/react';
-import { RotateCcw, Search } from 'lucide-react';
+import { Eye, RotateCcw, Search } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 
 interface CustomerFilters {
@@ -520,12 +520,14 @@ const CustomerTable = ({
 
                                         <td className="whitespace-nowrap px-6 py-4 text-right">
                                             <Link href={profile({ cnic: customer.cnic })}>
-                                                <button
-                                                    type="button"
-                                                    className="text-sm font-medium text-primary hover:underline cursor-pointer"
+                                                <Button
+                                                    variant="ghost"
+                                                    size="sm"
+                                                    className="gap-2 cursor-pointer"
                                                 >
+                                                    <Eye className="h-4 w-4" />
                                                     View
-                                                </button>
+                                                </Button>
                                             </Link>
                                         </td>
                                     </tr>

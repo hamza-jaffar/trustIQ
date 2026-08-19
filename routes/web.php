@@ -33,20 +33,23 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::delete('/{user}', [UserController::class, 'delete'])->name('.delete')->middleware('permission:users.delete');
     });
 
-    Route::prefix('customers')->name('customers')->group(function () {
+    Route::prefix('customers')->name('customers')->middleware('permission:customer.view')->group(function () {
         Route::get('/', [CustomerController::class, 'index'])->name('.index');
-        Route::get('/create', [CustomerController::class, 'create'])->name('.create');
-        Route::post('/store', [CustomerController::class, 'store'])->name('store');
-        Route::put('/update/{id}', [CustomerController::class, 'update'])->name('.update');
+        Route::get('/create', [CustomerController::class, 'create'])->name('.create')->middleware('permission:customer.create');
+        Route::post('/store', [CustomerController::class, 'store'])->name('store')->middleware('permission:customer.create');
+        Route::put('/update/{id}', [CustomerController::class, 'update'])->name('.update')->middleware('permission:customer.edit');
         Route::get('/search-by-cnic/{cnic}', [CustomerController::class, 'searchByCnic'])->name('.searchByCnic');
-        Route::get('/{cnic}', [CustomerController::class, 'profile'])->name('.profile');
+        Route::get('/{cnic}', [CustomerController::class, 'profile'])->name('.profile')->middleware('permission:customer.view');
     });
 
-    Route::prefix('installments')->name('installments')->group(function () {
+    Route::prefix('installments')->name('installments')->middleware('permission:installment.view')->group(function () {
         Route::get('/', [InstallmentsController::class, 'index'])->name('.index');
-        Route::get('/create', [InstallmentsController::class, 'create'])->name('.create');
-        Route::post('/store', [InstallmentsController::class, 'store'])->name('.store');
-        Route::get('/{id}', [InstallmentsController::class, 'show'])->name('.show');
+        Route::get('/create', [InstallmentsController::class, 'create'])->name('.create')->middleware('permission:installment.create');
+        Route::post('/store', [InstallmentsController::class, 'store'])->name('.store')->middleware('permission:installment.create');
+        Route::get('/{id}/edit', [InstallmentsController::class, 'edit'])->name('.edit')->middleware('permission:installment.edit');
+        Route::put('/{id}', [InstallmentsController::class, 'update'])->name('.update')->middleware('permission:installment.edit');
+        Route::put('/{id}/status', [InstallmentsController::class, 'updateStatus'])->name('.updateStatus')->middleware('permission:installment.edit');
+        Route::get('/{id}', [InstallmentsController::class, 'show'])->name('.show')->middleware('permission:installment.delete');
     });
 
 });

@@ -48,11 +48,20 @@ export interface Customer {
     verification_status: 'pending' | 'verified' | 'rejected';
     email_confirm_at: string | null;
     phone_confirm_at: string | null;
+    installment_counts: {
+        pending: number;
+        active: number;
+        completed: number;
+        rejected: number;
+        cancelled: number;
+        total: number;
+    }
     created_at: string;
     updated_at: string;
 }
 
 export type Guarantor = {
+    id: number | string;
     customer_id: string
     full_name: string
     cnic: string
@@ -86,6 +95,7 @@ export interface Installment {
         phone: string;
         email: string;
     };
+    guarantors: Guarantor[];
     created_by?: {
         id: number;
         name: string;

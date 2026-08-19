@@ -46,11 +46,14 @@ const allMainNavItems: NavItem[] = [
         title: 'Customers',
         href: customers.index(),
         icon: Users,
+        permission: 'customer.view'
     },
     {
         title: 'Installments',
         href: installments.index(),
         icon: ReceiptText,
+        permission: 'installment.view'
+
     }
 ];
 

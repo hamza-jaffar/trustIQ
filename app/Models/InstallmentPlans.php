@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-#[Fillable('organization_id', 'customer_id', 'created_by_user_id', 'item_reference', 'total_price', 'down_payment', 'financed_amount', 'flat_markup', 'total_payable', 'frequency', 'status', 'start_date')]
+#[Fillable('organization_id', 'customer_id', 'created_by_user_id', 'item_reference', 'total_price', 'down_payment', 'financed_amount', 'flat_markup', 'total_payable', 'frequency', 'status', 'installment_amount', 'start_date')]
 class InstallmentPlans extends Model
 {
     use SoftDeletes;
