@@ -142,7 +142,7 @@ const CustomerTable = ({
                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
                     {/* Search */}
                     <div className="lg:col-span-2">
-                        <label className="mb-1.5 block text-sm font-medium text-gray-700">
+                        <label className="text-sm">
                             Search
                         </label>
 
@@ -161,7 +161,7 @@ const CustomerTable = ({
 
                     {/* Verification */}
                     <div>
-                        <label className="mb-1.5 block text-sm font-medium text-gray-700">
+                        <label className="text-sm">
                             Verification
                         </label>
 
@@ -187,9 +187,8 @@ const CustomerTable = ({
                         </Select>
                     </div>
 
-                    {/* Gender */}
                     <div>
-                        <label className="mb-1.5 block text-sm font-medium text-gray-700">
+                        <label className="text-sm">
                             Gender
                         </label>
 
@@ -215,9 +214,8 @@ const CustomerTable = ({
                         </Select>
                     </div>
 
-                    {/* City */}
                     <div>
-                        <label className="mb-1.5 block text-sm font-medium text-gray-700">
+                        <label className="text-sm">
                             City
                         </label>
 
@@ -246,9 +244,8 @@ const CustomerTable = ({
                         </Select>
                     </div>
 
-                    {/* Province */}
                     <div>
-                        <label className="mb-1.5 block text-sm font-medium text-gray-700">
+                        <label className="text-sm">
                             Province
                         </label>
 
@@ -277,9 +274,8 @@ const CustomerTable = ({
                         </Select>
                     </div>
 
-                    {/* Email */}
                     <div>
-                        <label className="mb-1.5 block text-sm font-medium text-gray-700">
+                        <label className="text-sm">
                             Email Verification
                         </label>
 
@@ -308,9 +304,8 @@ const CustomerTable = ({
                         </Select>
                     </div>
 
-                    {/* Phone */}
                     <div>
-                        <label className="mb-1.5 block text-sm font-medium text-gray-700">
+                        <label className="text-sm">
                             Phone Verification
                         </label>
 
@@ -339,9 +334,8 @@ const CustomerTable = ({
                         </Select>
                     </div>
 
-                    {/* Minimum Income */}
                     <div>
-                        <label className="mb-1.5 block text-sm font-medium text-gray-700">
+                        <label className="text-sm">
                             Minimum Income
                         </label>
 
@@ -356,9 +350,8 @@ const CustomerTable = ({
                         />
                     </div>
 
-                    {/* Maximum Income */}
                     <div>
-                        <label className="mb-1.5 block text-sm font-medium text-gray-700">
+                        <label className="text-sm">
                             Maximum Income
                         </label>
 
@@ -398,7 +391,7 @@ const CustomerTable = ({
                 <div className="border-b divide-border px-6 py-4">
                     <div className="flex items-center justify-between">
                         <div>
-                            <h2 className="text-lg font-semibold text-gray-900">
+                            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-200">
                                 Customers
                             </h2>
 
@@ -408,7 +401,7 @@ const CustomerTable = ({
                             </p>
                         </div>
 
-                        <div className="text-sm text-gray-500">
+                        <div className="text-sm text-gray-500 dark:text-gray-200">
                             {customers.total} customers
                         </div>
                     </div>
@@ -474,7 +467,7 @@ const CustomerTable = ({
                                                 </div>
 
                                                 <div className="ml-3">
-                                                    <div className="font-medium text-gray-900">
+                                                    <div className="font-medium text-gray-900 dark:text-gray-100">
                                                         {customer.first_name}{' '}
                                                         {customer.last_name}
                                                     </div>
@@ -486,23 +479,23 @@ const CustomerTable = ({
                                             </div>
                                         </td>
 
-                                        <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-600">
+                                        <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-600 dark:text-gray-200">
                                             {customer.cnic}
                                         </td>
 
-                                        <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-600">
+                                        <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-600 dark:text-gray-200">
                                             {customer.phone}
                                         </td>
 
-                                        <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-600">
+                                        <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-600 dark:text-gray-200">
                                             {customer.email}
                                         </td>
 
-                                        <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-600">
+                                        <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-600 dark:text-gray-200">
                                             {customer.city}
                                         </td>
 
-                                        <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-600">
+                                        <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-600 dark:text-gray-200">
                                             {customer.occupation}
                                         </td>
 

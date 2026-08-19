@@ -56,6 +56,12 @@ export interface Customer {
         cancelled: number;
         total: number;
     }
+    dti_percentage: string;
+    risk: {
+        value: string;
+        label: string;
+        badge_color: string;
+    }
     created_at: string;
     updated_at: string;
 }

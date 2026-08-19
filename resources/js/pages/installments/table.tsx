@@ -142,13 +142,12 @@ const InstallmentTable = ({
         <div className="space-y-4">
             <div className="rounded-xl border bg-background p-4 shadow-sm">
                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-
-                    <div className="lg:col-span-2">
-                        <label className="mb-1.5 block text-sm font-medium">
+                    <div className="md:col-span-2">
+                        <label className="text-sm">
                             Search
                         </label>
 
-                        <div className="relative">
+                        <div className="relative w-full">
                             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
 
                             <Input
@@ -157,273 +156,227 @@ const InstallmentTable = ({
                                     setSearch(e.target.value)
                                 }
                                 placeholder="Customer, CNIC, phone, email or item reference..."
-                                className="pl-9"
+                                className="pl-9 w-full"
                             />
                         </div>
                     </div>
 
-                    <div>
-                        <label className="mb-1.5 block text-sm font-medium">
-                            Status
-                        </label>
+                    <div className='md:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4 w-full'>
+                        <div className='w-full'>
+                            <label className="text-sm">
+                                Status
+                            </label>
 
-                        <Select
-                            value={filters.status || 'all'}
-                            onValueChange={(value) =>
-                                updateFilters({
-                                    status:
-                                        value === 'all'
-                                            ? ''
-                                            : value,
-                                    page: 1,
-                                })
-                            }
-                        >
-                            <SelectTrigger>
-                                <SelectValue placeholder="All statuses" />
-                            </SelectTrigger>
+                            <Select
+                                value={filters.status || 'all'}
+                                onValueChange={(value) =>
+                                    updateFilters({
+                                        status:
+                                            value === 'all'
+                                                ? ''
+                                                : value,
+                                        page: 1,
+                                    })
+                                }
+                            >
+                                <SelectTrigger className='w-full'>
+                                    <SelectValue placeholder="All statuses" />
+                                </SelectTrigger>
 
-                            <SelectContent>
-                                <SelectItem value="all">
-                                    All Statuses
-                                </SelectItem>
+                                <SelectContent>
+                                    <SelectItem value="all">
+                                        All Statuses
+                                    </SelectItem>
+                                    <SelectItem value="pending_approval">
+                                        Pending Approval
+                                    </SelectItem>
+                                    <SelectItem value="approved">
+                                        Approved
+                                    </SelectItem>
+                                    <SelectItem value="active">
+                                        Active
+                                    </SelectItem>
+                                    <SelectItem value="completed">
+                                        Completed
+                                    </SelectItem>
+                                    <SelectItem value="rejected">
+                                        Rejected
+                                    </SelectItem>
+                                    <SelectItem value="cancelled">
+                                        Cancelled
+                                    </SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
 
-                                <SelectItem value="pending_approval">
-                                    Pending Approval
-                                </SelectItem>
+                        <div className='w-full'>
+                            <label className="text-sm">
+                                Frequency
+                            </label>
 
-                                <SelectItem value="approved">
-                                    Approved
-                                </SelectItem>
+                            <Select
+                                value={filters.frequency || 'all'}
+                                onValueChange={(value) =>
+                                    updateFilters({
+                                        frequency:
+                                            value === 'all'
+                                                ? ''
+                                                : value,
+                                        page: 1,
+                                    })
+                                }
+                            >
+                                <SelectTrigger className='w-full'>
+                                    <SelectValue placeholder="All frequencies" />
+                                </SelectTrigger>
 
-                                <SelectItem value="active">
-                                    Active
-                                </SelectItem>
-
-                                <SelectItem value="completed">
-                                    Completed
-                                </SelectItem>
-
-                                <SelectItem value="rejected">
-                                    Rejected
-                                </SelectItem>
-
-                                <SelectItem value="cancelled">
-                                    Cancelled
-                                </SelectItem>
-                            </SelectContent>
-                        </Select>
+                                <SelectContent>
+                                    <SelectItem value="all">
+                                        All Frequencies
+                                    </SelectItem>
+                                    <SelectItem value="daily">
+                                        Daily
+                                    </SelectItem>
+                                    <SelectItem value="weekly">
+                                        Weekly
+                                    </SelectItem>
+                                    <SelectItem value="biweekly">
+                                        Biweekly
+                                    </SelectItem>
+                                    <SelectItem value="monthly">
+                                        Monthly
+                                    </SelectItem>
+                                    <SelectItem value="quarterly">
+                                        Quarterly
+                                    </SelectItem>
+                                    <SelectItem value="yearly">
+                                        Yearly
+                                    </SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
                     </div>
 
-                    {/* Frequency */}
+                    <div className='md:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4 w-full'>
+                        <div className='w-full'>
+                            <label className="text-sm">
+                                Created By
+                            </label>
 
-                    <div>
-                        <label className="mb-1.5 block text-sm font-medium">
-                            Frequency
-                        </label>
+                            <Select
+                                value={
+                                    filters.created_by
+                                        ? String(
+                                            filters.created_by,
+                                        )
+                                        : 'all'
+                                }
+                                onValueChange={(value) =>
+                                    updateFilters({
+                                        created_by:
+                                            value === 'all'
+                                                ? ''
+                                                : value,
+                                        page: 1,
+                                    })
+                                }
+                            >
+                                <SelectTrigger className='w-full'>
+                                    <SelectValue placeholder="Everyone" />
+                                </SelectTrigger>
 
-                        <Select
-                            value={filters.frequency || 'all'}
-                            onValueChange={(value) =>
-                                updateFilters({
-                                    frequency:
-                                        value === 'all'
-                                            ? ''
-                                            : value,
-                                    page: 1,
-                                })
-                            }
-                        >
-                            <SelectTrigger>
-                                <SelectValue placeholder="All frequencies" />
-                            </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="all">
+                                        Everyone
+                                    </SelectItem>
 
-                            <SelectContent>
-                                <SelectItem value="all">
-                                    All Frequencies
-                                </SelectItem>
+                                    {filterOptions.users.map(
+                                        (user) => (
+                                            <SelectItem
+                                                key={user.id}
+                                                value={String(
+                                                    user.id,
+                                                )}
+                                            >
+                                                {user.first_name} {user.last_name}
+                                            </SelectItem>
+                                        ),
+                                    )}
+                                </SelectContent>
+                            </Select>
+                        </div>
 
-                                <SelectItem value="daily">
-                                    Daily
-                                </SelectItem>
+                        <div className='w-full'>
+                            <label className="text-sm">
+                                Per Page
+                            </label>
 
-                                <SelectItem value="weekly">
-                                    Weekly
-                                </SelectItem>
+                            <Select
+                                value={String(filters.per_page)}
+                                onValueChange={(value) =>
+                                    updateFilters({
+                                        per_page: Number(value),
+                                        page: 1,
+                                    })
+                                }
+                            >
+                                <SelectTrigger className='w-full'>
+                                    <SelectValue />
+                                </SelectTrigger>
 
-                                <SelectItem value="biweekly">
-                                    Biweekly
-                                </SelectItem>
-
-                                <SelectItem value="monthly">
-                                    Monthly
-                                </SelectItem>
-
-                                <SelectItem value="quarterly">
-                                    Quarterly
-                                </SelectItem>
-
-                                <SelectItem value="yearly">
-                                    Yearly
-                                </SelectItem>
-                            </SelectContent>
-                        </Select>
+                                <SelectContent>
+                                    <SelectItem value="10">10</SelectItem>
+                                    <SelectItem value="15">15</SelectItem>
+                                    <SelectItem value="25">25</SelectItem>
+                                    <SelectItem value="50">50</SelectItem>
+                                    <SelectItem value="100">100</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
                     </div>
 
-                    {/* Created By */}
-
                     <div>
-                        <label className="mb-1.5 block text-sm font-medium">
-                            Created By
-                        </label>
-
-                        <Select
-                            value={
-                                filters.created_by
-                                    ? String(
-                                        filters.created_by,
-                                    )
-                                    : 'all'
-                            }
-                            onValueChange={(value) =>
-                                updateFilters({
-                                    created_by:
-                                        value === 'all'
-                                            ? ''
-                                            : value,
-                                    page: 1,
-                                })
-                            }
-                        >
-                            <SelectTrigger>
-                                <SelectValue placeholder="Everyone" />
-                            </SelectTrigger>
-
-                            <SelectContent>
-                                <SelectItem value="all">
-                                    Everyone
-                                </SelectItem>
-
-                                {filterOptions.users.map(
-                                    (user) => (
-                                        <SelectItem
-                                            key={user.id}
-                                            value={String(
-                                                user.id,
-                                            )}
-                                        >
-                                            {user.first_name} {user.last_name}
-                                        </SelectItem>
-                                    ),
-                                )}
-                            </SelectContent>
-                        </Select>
-                    </div>
-
-                    {/* Per Page */}
-
-                    <div>
-                        <label className="mb-1.5 block text-sm font-medium">
-                            Per Page
-                        </label>
-
-                        <Select
-                            value={String(filters.per_page)}
-                            onValueChange={(value) =>
-                                updateFilters({
-                                    per_page: Number(value),
-                                    page: 1,
-                                })
-                            }
-                        >
-                            <SelectTrigger>
-                                <SelectValue />
-                            </SelectTrigger>
-
-                            <SelectContent>
-                                <SelectItem value="10">
-                                    10
-                                </SelectItem>
-
-                                <SelectItem value="15">
-                                    15
-                                </SelectItem>
-
-                                <SelectItem value="25">
-                                    25
-                                </SelectItem>
-
-                                <SelectItem value="50">
-                                    50
-                                </SelectItem>
-
-                                <SelectItem value="100">
-                                    100
-                                </SelectItem>
-                            </SelectContent>
-                        </Select>
-                    </div>
-
-                    {/* Start Date From */}
-
-                    <div>
-                        <label className="mb-1.5 block text-sm font-medium">
+                        <label className="text-sm">
                             Start Date From
                         </label>
-
                         <Input
                             type="date"
-                            value={
-                                filters.start_date_from ?? ''
-                            }
+                            value={filters.start_date_from ?? ''}
                             onChange={(e) =>
                                 updateFilters({
-                                    start_date_from:
-                                        e.target.value,
+                                    start_date_from: e.target.value,
                                     page: 1,
                                 })
                             }
                         />
                     </div>
 
-                    {/* Start Date To */}
-
                     <div>
-                        <label className="mb-1.5 block text-sm font-medium">
+                        <label className="text-sm">
                             Start Date To
                         </label>
-
                         <Input
                             type="date"
-                            value={
-                                filters.start_date_to ?? ''
-                            }
+                            value={filters.start_date_to ?? ''}
                             onChange={(e) =>
                                 updateFilters({
-                                    start_date_to:
-                                        e.target.value,
+                                    start_date_to: e.target.value,
                                     page: 1,
                                 })
                             }
                         />
                     </div>
 
-                    {/* Price */}
-
                     <div>
-                        <label className="mb-1.5 block text-sm font-medium">
+                        <label className="text-sm">
                             Min Total Price
                         </label>
-
                         <Input
                             type="number"
-                            value={
-                                filters.min_price ?? ''
-                            }
+                            value={filters.min_price ?? ''}
                             onChange={(e) =>
                                 updateFilters({
-                                    min_price:
-                                        e.target.value,
+                                    min_price: e.target.value,
                                     page: 1,
                                 })
                             }
@@ -432,19 +385,15 @@ const InstallmentTable = ({
                     </div>
 
                     <div>
-                        <label className="mb-1.5 block text-sm font-medium">
+                        <label className="text-sm">
                             Max Total Price
                         </label>
-
                         <Input
                             type="number"
-                            value={
-                                filters.max_price ?? ''
-                            }
+                            value={filters.max_price ?? ''}
                             onChange={(e) =>
                                 updateFilters({
-                                    max_price:
-                                        e.target.value,
+                                    max_price: e.target.value,
                                     page: 1,
                                 })
                             }
@@ -452,22 +401,16 @@ const InstallmentTable = ({
                         />
                     </div>
 
-                    {/* Financed */}
-
                     <div>
-                        <label className="mb-1.5 block text-sm font-medium">
+                        <label className="text-sm">
                             Min Financed
                         </label>
-
                         <Input
                             type="number"
-                            value={
-                                filters.min_financed ?? ''
-                            }
+                            value={filters.min_financed ?? ''}
                             onChange={(e) =>
                                 updateFilters({
-                                    min_financed:
-                                        e.target.value,
+                                    min_financed: e.target.value,
                                     page: 1,
                                 })
                             }
@@ -475,41 +418,31 @@ const InstallmentTable = ({
                     </div>
 
                     <div>
-                        <label className="mb-1.5 block text-sm font-medium">
+                        <label className="text-sm">
                             Max Financed
                         </label>
-
                         <Input
                             type="number"
-                            value={
-                                filters.max_financed ?? ''
-                            }
+                            value={filters.max_financed ?? ''}
                             onChange={(e) =>
                                 updateFilters({
-                                    max_financed:
-                                        e.target.value,
+                                    max_financed: e.target.value,
                                     page: 1,
                                 })
                             }
                         />
                     </div>
 
-                    {/* Payable */}
-
                     <div>
-                        <label className="mb-1.5 block text-sm font-medium">
+                        <label className="text-sm">
                             Min Total Payable
                         </label>
-
                         <Input
                             type="number"
-                            value={
-                                filters.min_payable ?? ''
-                            }
+                            value={filters.min_payable ?? ''}
                             onChange={(e) =>
                                 updateFilters({
-                                    min_payable:
-                                        e.target.value,
+                                    min_payable: e.target.value,
                                     page: 1,
                                 })
                             }
@@ -517,19 +450,15 @@ const InstallmentTable = ({
                     </div>
 
                     <div>
-                        <label className="mb-1.5 block text-sm font-medium">
+                        <label className="text-sm">
                             Max Total Payable
                         </label>
-
                         <Input
                             type="number"
-                            value={
-                                filters.max_payable ?? ''
-                            }
+                            value={filters.max_payable ?? ''}
                             onChange={(e) =>
                                 updateFilters({
-                                    max_payable:
-                                        e.target.value,
+                                    max_payable: e.target.value,
                                     page: 1,
                                 })
                             }

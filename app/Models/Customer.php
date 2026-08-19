@@ -56,8 +56,43 @@ class Customer extends Model
         ];
     }
 
-    public function amountToBePaid()
+    public function calculateTotalMonthlyCommitment(): float
     {
-        // $amout = $this->installments()->where('status', 'active')
+        return $this->installments()
+            ->where('status', 'active')
+            ->get()
+            ->sum(function ($plan) {
+                $amount = $plan->installment_amount ?? 0;
+
+                switch (strtolower($plan->frequency)) {
+                    case 'daily':
+                        return $amount * 30;
+                    case 'weekly':
+                        return $amount * 4.33;
+                    case 'biweekly':
+                        return $amount * 2.16;
+                    case 'monthly':
+                        return $amount;
+                    case 'quarterly':
+                        return $amount / 3;
+                    case 'yearly':
+                        return $amount / 12;
+                    default:
+                        return $amount;
+                }
+            });
+    }
+
+    public function calculateDtiPercentage(): float
+    {
+        if (empty($this->monthly_income) || $this->monthly_income <= 0) {
+            return 0.00;
+        }
+
+        $totalToPay = $this->calculateTotalMonthlyCommitment() ?? 0;
+
+        $percentage = ($totalToPay / $this->monthly_income) * 100;
+
+        return round($percentage, 2);
     }
 }

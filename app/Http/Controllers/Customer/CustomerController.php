@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Customer;
 
+use App\Enum\SalaryCommitedRisk;
 use App\Helpers\FileHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Customer\StoreCustomerRequest;
@@ -219,19 +220,36 @@ class CustomerController extends Controller
     }
 
     public function profile(string $cnic)
-    {
-        $customer = Customer::where('cnic', $cnic)->with([
-            'activeOrPendingInstallments' => function ($query) {
-                $query->latest()->limit(4);
-            },
-        ])->first();
+{
+    $customer = Customer::where('cnic', $cnic)->with([
+        'activeOrPendingInstallments' => function ($query) {
+            $query->latest()->limit(4);
+        },
+    ])->first();
 
-        if ($customer) {
-            $customer->installment_counts = $customer->installmentsNumber();
-        }
+    if ($customer) {
+        $customer->installment_counts = $customer->installmentsNumber();
+        
+        // Calculate DTI percentage and assign the enum risk level & badge info
+        $dtiPercentage = $customer->calculateDtiPercentage();
+        $riskEnum = SalaryCommitedRisk::fromPercentage($dtiPercentage);
 
-        return Inertia::render('customer/profile/index', ['customer' => $customer]);
+        // Attach risk properties to the customer object/array for frontend use
+        $customer->dti_percentage = $dtiPercentage;
+        $customer->risk = [
+            'value' => $riskEnum->value,
+            'label' => $riskEnum->label(),
+            'badge_color' => $riskEnum->badgeColor(),
+        ];
     }
+
+    // Uncomment this only when you are done debugging
+    // dd($customer);
+
+    return Inertia::render('customer/profile/index', [
+        'customer' => $customer
+    ]);
+}
 
     public function update(UpdateCustomerRequest $request, string $id)
     {
