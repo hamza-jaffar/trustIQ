@@ -190,6 +190,7 @@ export default function RoleForm({
                     <Button type="button" variant="outline" asChild>
                         <Link href={cancelHref}>Cancel</Link>
                     </Button>
+                    <Button type='submit' onClick={() => handleSubmit}> Submit </Button>
                 </div>
             </form>
         </section>

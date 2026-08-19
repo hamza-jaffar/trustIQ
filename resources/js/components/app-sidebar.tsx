@@ -69,9 +69,14 @@ const allMainNavItems: NavItem[] = [
 //         icon: BookOpen,
 
 export function AppSidebar() {
-    const { permissions = [] } = usePage().props as { permissions?: string[] };
+    const { permissions = [], organization } = usePage().props as { permissions?: string[], organization?: any };
 
-    const mainNavItems = allMainNavItems.filter((item) => !item.permission || permissions.includes(item.permission));
+    const mainNavItems = allMainNavItems.filter((item) => {
+        if (item.title === 'Organization' && !organization) {
+            return true;
+        }
+        return !item.permission || permissions.includes(item.permission);
+    });
 
     return (
         <Sidebar collapsible="icon" variant="inset">

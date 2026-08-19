@@ -23,6 +23,15 @@ class PermissionMiddleware
             ->where('user_id', $user->id)
             ->first();
 
+        if (! $organizationUser) {
+            foreach ($permissions as $permission) {
+                if (in_array($permission, ['organization.view', 'organization.update'], true)) {
+                    return $next($request);
+                }
+            }
+            abort(403);
+        }
+
         $userPermissions = $organizationUser?->role?->permissions()->pluck('name')->all() ?? [];
 
         foreach ($permissions as $permission) {

@@ -12,7 +12,7 @@ import Heading from '@/components/heading'
 const OrganizationIndex = () => {
   const { organization, permissions } = usePage().props;
   const formRef = useRef<HTMLFormElement>(null)
-  const canUpdate = permissions.includes('organization.update');
+  const canUpdate = !organization || permissions.includes('organization.update');
   // Replace with your organization's current logo URL
   const [logoPreview, setLogoPreview] = useState<string | null>(organization?.logo ? `/storage/${organization?.logo}` : null);
 

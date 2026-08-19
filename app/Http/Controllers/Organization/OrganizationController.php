@@ -28,6 +28,17 @@ class OrganizationController extends Controller
             $user = $request->user();
 
             $organizationId = $request->input('organization_id') ?? null;
+            $existingUserOrg = OrganizationUser::where('user_id', $user->id)->first();
+            
+            if ($organizationId) {
+                if (!$existingUserOrg || $existingUserOrg->organization_id != $organizationId) {
+                    throw new \Exception('Unauthorized action.');
+                }
+            } else {
+                if ($existingUserOrg) {
+                    throw new \Exception('You already belong to an organization.');
+                }
+            }
 
             $logo = null;
 
