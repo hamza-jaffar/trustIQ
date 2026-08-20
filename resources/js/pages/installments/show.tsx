@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { useForm, usePage } from '@inertiajs/react';
 import { Loader2 } from 'lucide-react';
 import { Installment } from '@/types/data';
-
+import SchedulesList from './SchedulesList';
 interface Props {
     installment: Installment;
     statuses: string[];
@@ -97,48 +97,86 @@ const ShowInstallment = ({ installment, statuses }: Props) => {
                 </Card>
 
                 <div className="flex flex-col gap-6">
-                    {/* Update Status */}
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>Update Status</CardTitle>
-                            <CardDescription>Change the current status of this installment plan</CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                            <form onSubmit={submitStatusUpdate} className="flex flex-col gap-4">
-                                <div className="flex flex-col gap-2">
-                                    <Label htmlFor="status">Status</Label>
-                                    <Select
-                                        value={data.status}
-                                        onValueChange={(val) => setData('status', val)}
-                                        disabled={processing}
-                                    >
-                                        <SelectTrigger id="status">
-                                            <SelectValue placeholder="Select status" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            {statuses.map(status => (
-                                                <SelectItem key={status} value={status} className="capitalize">
-                                                    {status.replace('_', ' ')}
-                                                </SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
+                    {statuses.includes(installment.status) ? (
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Update Status</CardTitle>
+                                <CardDescription>
+                                    Change the current status of this installment plan
+                                </CardDescription>
+                            </CardHeader>
+
+                            <CardContent>
+                                <form
+                                    onSubmit={submitStatusUpdate}
+                                    className="flex flex-col gap-4"
+                                >
+                                    <div className="flex flex-col gap-2">
+                                        <Label htmlFor="status">Status</Label>
+
+                                        <Select
+                                            value={data.status}
+                                            onValueChange={(val) => setData("status", val)}
+                                            disabled={processing}
+                                        >
+                                            <SelectTrigger id="status">
+                                                <SelectValue placeholder="Select status" />
+                                            </SelectTrigger>
+
+                                            <SelectContent>
+                                                {statuses.map((status) => (
+                                                    <SelectItem
+                                                        key={status}
+                                                        value={status}
+                                                        className="capitalize"
+                                                    >
+                                                        {status.replace(/_/g, " ")}
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+
+                                    <div className="flex justify-end mt-2">
+                                        <Button
+                                            type="submit"
+                                            disabled={
+                                                processing ||
+                                                data.status === installment.status
+                                            }
+                                        >
+                                            {processing ? (
+                                                <>
+                                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                                    Updating...
+                                                </>
+                                            ) : (
+                                                "Update Status"
+                                            )}
+                                        </Button>
+                                    </div>
+                                </form>
+                            </CardContent>
+                        </Card>
+                    ) : (
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Status</CardTitle>
+                                <CardDescription>
+                                    Current status of this installment plan
+                                </CardDescription>
+                            </CardHeader>
+
+                            <CardContent>
+                                <div className="flex items-center">
+                                    <span className="capitalize">
+                                        {installment.status.replace(/_/g, " ")}
+                                    </span>
                                 </div>
-                                <div className="flex justify-end mt-2">
-                                    <Button type="submit" disabled={processing || data.status === installment.status}>
-                                        {processing ? (
-                                            <>
-                                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                                Updating...
-                                            </>
-                                        ) : (
-                                            'Update Status'
-                                        )}
-                                    </Button>
-                                </div>
-                            </form>
-                        </CardContent>
-                    </Card>
+                            </CardContent>
+                        </Card>
+                    )}
+
 
                     {/* Customer Info */}
                     <Card>
@@ -214,6 +252,8 @@ const ShowInstallment = ({ installment, statuses }: Props) => {
                 </div>
             )}
 
+            {/* Installment Schedules List */}
+            <SchedulesList schedules={installment.installment_schedules || []} />
         </div>
     );
 };

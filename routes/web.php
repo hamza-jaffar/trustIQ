@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Customer\CustomerController;
+use App\Http\Controllers\Installments\InstallmentPaymentController;
 use App\Http\Controllers\Installments\InstallmentsController;
 use App\Http\Controllers\Organization\OrganizationController;
 use App\Http\Controllers\Role\RoleController;
@@ -50,6 +51,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::put('/{id}', [InstallmentsController::class, 'update'])->name('.update')->middleware('permission:installment.edit');
         Route::put('/{id}/status', [InstallmentsController::class, 'updateStatus'])->name('.updateStatus')->middleware('permission:installment.edit');
         Route::get('/{id}', [InstallmentsController::class, 'show'])->name('.show')->middleware('permission:installment.delete');
+
+        Route::post('/schedules/{schedule}/payments', [InstallmentPaymentController::class, 'store'])->name('.payments.store')->middleware('permission:installment.edit');
     });
 
 });

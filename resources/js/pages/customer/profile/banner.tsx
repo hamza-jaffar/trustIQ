@@ -43,7 +43,7 @@ const ProfileBanner = ({ customer }: { customer: Customer }) => {
                         </div>
                         <div className="flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider backdrop-blur-md bg-amber-400/20 border border-amber-300/40 text-amber-200 shadow-sm">
                             <Star className="h-3.5 w-3.5 fill-amber-300 text-amber-300" />
-                            <span>Trust Score: {4.8}/5</span>
+                            <span>Trust Score: {customer.trust_score ? `${customer.trust_score.score}/100` : 'N/A'}</span>
                         </div>
                     </div>
                     <p className="text-indigo-100 font-medium tracking-wide">National ID (CNIC): <span className="font-mono bg-white/10 px-2 py-0.5 rounded text-white">{customer.cnic}</span></p>

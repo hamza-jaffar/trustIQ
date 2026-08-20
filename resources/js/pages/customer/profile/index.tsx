@@ -8,6 +8,7 @@ import installments from '@/routes/installments';
 import ProfileInstallment from './installments';
 import ProfileBanner from './banner';
 import InstallmentCountsCard from './installment-count-cards';
+import TrustScoreCard from './trust-score-card';
 
 const CustomerProfile = ({ customer }: { customer: Customer }) => {
 
@@ -52,6 +53,7 @@ const CustomerProfile = ({ customer }: { customer: Customer }) => {
                     </div>
                 </div>
                 <div className="lg:col-span-2 space-y-6">
+                    <TrustScoreCard trustScore={customer.trust_score} />
                     <div className="p-5 rounded-2xl bg-linear-to-br from-cyan-500/5 to-blue-500/5 border border-cyan-100/50 dark:border-cyan-950/40 space-y-4">
                         <div className="flex items-center gap-2 pb-2 border-b border-indigo-100/30">
                             <User className="h-5 w-5 text-indigo-500" />

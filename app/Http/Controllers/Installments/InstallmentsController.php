@@ -2,17 +2,18 @@
 
 namespace App\Http\Controllers\Installments;
 
+use App\Enum\InstallmentStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Installment\CreateInstallmentRequest;
 use App\Http\Requests\Installment\UpdateInstallmentRequest;
 use App\Models\Customer;
 use App\Models\InstallmentPlans;
 use App\Models\User;
-use App\Enum\InstallmentStatus;
+use App\Services\InstallmentScheduleService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Inertia\Inertia;
 use Illuminate\Validation\Rule;
+use Inertia\Inertia;
 
 class InstallmentsController extends Controller
 {
@@ -206,16 +207,9 @@ class InstallmentsController extends Controller
 
             $totalPrice = (float) $validated['total_price'];
             $downPayment = (float) $validated['down_payment'];
-
-            // Amount remaining after down payment
             $financedAmount = $totalPrice - $downPayment;
-
-            // Example: 20% flat markup
             $markupRate = 20;
-
             $flatMarkup = $financedAmount * ($markupRate / 100);
-
-            // Total amount customer will pay through installments
             $totalPayable = $financedAmount + $flatMarkup;
 
             $installment = InstallmentPlans::create([
@@ -259,19 +253,43 @@ class InstallmentsController extends Controller
         $installment = InstallmentPlans::with([
             'customer',
             'createdBy:id,first_name,last_name,email',
-            'guarantors'
+            'guarantors',
         ])->findOrFail($id);
-        
+
+        $schedules = $installment->installmentSchedules()
+            ->where('status', '!=', 'pending')
+            ->with('installmentPayments')
+            ->get();
+
+        $latestPendingSchedule = $installment->installmentSchedules()
+            ->where('status', 'pending')
+            ->orderBy('due_date', 'asc')
+            ->with('installmentPayments')
+            ->first();
+
+        if ($latestPendingSchedule) {
+            $schedules->push($latestPendingSchedule);
+        }
+
+        $schedules = $schedules
+            ->sortBy('id')
+            ->values();
+
+        $installment->setRelation(
+            'installmentSchedules',
+            $schedules
+        );
+
         return Inertia::render('installments/show', [
             'installment' => $installment,
-            'statuses' => array_column(InstallmentStatus::cases(), 'value')
+            'statuses' => ['pending_approval', 'active'],
         ]);
     }
 
     /**
      * Update the status of the specified resource.
      */
-    public function updateStatus(Request $request, string $id)
+    public function updateStatus(Request $request, string $id, InstallmentScheduleService $scheduleService)
     {
         $installment = InstallmentPlans::findOrFail($id);
 
@@ -279,8 +297,10 @@ class InstallmentsController extends Controller
             'status' => ['required', Rule::enum(InstallmentStatus::class)],
         ]);
 
-        if ($validated['status'] === InstallmentStatus::ACTIVE->value && !$installment->start_date) {
+        if ($validated['status'] === InstallmentStatus::ACTIVE->value && ! $installment->start_date) {
             $installment->start_date = now();
+            $installment->save();
+            $scheduleService->generateSchedules($installment);
         }
 
         $installment->update([
@@ -296,7 +316,7 @@ class InstallmentsController extends Controller
     public function edit(string $id)
     {
         $installment = InstallmentPlans::with('guarantors')->findOrFail($id);
-        
+
         $customers = Customer::query()
             ->select([
                 'id',

@@ -13,7 +13,7 @@ class InstallmentPlans extends Model
 
     public function installmentSchedules()
     {
-        return $this->hasMany(InstallmentSchedules::class);
+        return $this->hasMany(InstallmentSchedules::class, 'installment_plan_id');
     }
 
     public function guarantors()

@@ -12,4 +12,9 @@ class InstallmentSchedules extends Model
     {
         return $this->belongsTo(InstallmentPlans::class);
     }
+
+    public function installmentPayments()
+    {
+        return $this->hasMany(InstallmentPayment::class, 'installment_schedule_id');
+    }
 }

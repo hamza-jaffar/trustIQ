@@ -29,6 +29,27 @@ export interface Permission {
     updated_at: string;
 }
 
+export interface TrustScore {
+    score: number;
+    rating: 'Excellent' | 'Good' | 'Fair' | 'Poor' | 'New Customer';
+    color: 'green' | 'blue' | 'yellow' | 'red' | 'gray';
+    details: {
+        total_schedules: number;
+        paid_schedules: number;
+        on_time_schedules: number;
+        overdue_schedules: number;
+        completed_plans: number;
+        payment_completion: number;
+        on_time_payments: number;
+        scores?: {
+            completion: number;
+            on_time: number;
+            overdue: number;
+            history: number;
+        };
+    };
+}
+
 export interface Customer {
     id: number;
     first_name: string;
@@ -62,6 +83,7 @@ export interface Customer {
         label: string;
         badge_color: string;
     }
+    trust_score?: TrustScore;
     created_at: string;
     updated_at: string;
 }
@@ -107,4 +129,28 @@ export interface Installment {
         name: string;
         email: string;
     };
+    installment_schedules?: InstallmentSchedule[];
+}
+
+export interface InstallmentPayment {
+    id: number;
+    installment_schedule_id: number;
+    amount_paid: string;
+    payment_date: string;
+    payment_method: string | null;
+    transaction_reference: string | null;
+    notes: string | null;
+    created_at: string;
+}
+
+export interface InstallmentSchedule {
+    id: number;
+    installment_plan_id: number;
+    installment_number: number;
+    due_date: string;
+    amount_due: string;
+    amount_paid: string;
+    status: string;
+    paid_at: string | null;
+    installment_payments?: InstallmentPayment[];
 }
